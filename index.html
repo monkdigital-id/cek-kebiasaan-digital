@@ -62,6 +62,15 @@ h3{font-family:var(--display); font-size:18px; margin:0}
 .tips li b{display:block}
 .tips li.strong{border-left-color:var(--good)}
 .note{font-size:13px; color:var(--muted); margin:0}
+.tip-ref{display:block; margin-top:6px; font-size:12.5px; color:var(--muted)}
+.level-ref{font-size:12.5px; color:var(--muted); margin:-8px 0 0}
+.refs{margin:0; padding-left:18px; display:grid; gap:6px; font-size:12.5px; color:var(--muted)}
+.refs em{font-style:italic}
+details.ref-box{border-top:1px solid var(--line); padding-top:12px}
+details.ref-box summary{cursor:pointer; font-weight:700; font-size:14px; color:var(--ink)}
+details.ref-box summary:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+details.ref-box .refs{margin-top:10px}
+footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13px; color:var(--muted)}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
@@ -102,8 +111,13 @@ h3{font-family:var(--display); font-size:18px; margin:0}
     </div>
     <h2 id="res-title"></h2>
     <p class="res-text" id="res-text"></p>
+    <p class="level-ref" id="level-ref"></p>
     <h3 id="tips-title">Area yang bisa diperkuat</h3>
     <ul class="tips" id="tips"></ul>
+    <details class="ref-box" id="ref-box">
+      <summary>Daftar rujukan</summary>
+      <ol class="refs" id="ref-list"></ol>
+    </details>
     <p class="note" id="res-note"></p>
     <p class="note">Sebagian pertanyaan diadaptasi dari <em>Digital Wellbeing Self-Assessment</em> karya Sentient Digital &amp; Mind over Tech.</p>
     <div class="nav">
@@ -112,6 +126,7 @@ h3{font-family:var(--display); font-size:18px; margin:0}
     </div>
   </section>
 </div>
+<footer class="site">© monkdigital · Cek Kebiasaan Digital</footer>
 
 <script>
 var NOTE_CHILD = "Kuis ini alat refleksi sederhana, bukan penilaian klinis. Jika Anda khawatir dengan perilaku, tidur, atau emosi anak, konsultasikan dengan dokter anak atau psikolog anak.";
@@ -347,6 +362,108 @@ var GROUPS = {
   }
 };
 
+// ---------- RUJUKAN ----------
+// short = label singkat di bawah saran; full = sitasi lengkap di "Daftar rujukan"
+var REFS = {
+  who2019:{short:"WHO (2019)", full:"World Health Organization. (2019). <em>Guidelines on physical activity, sedentary behaviour and sleep for children under 5 years of age</em>. Geneva: WHO."},
+  who2020:{short:"WHO (2020)", full:"World Health Organization. (2020). <em>WHO guidelines on physical activity and sedentary behaviour</em>. Geneva: WHO."},
+  aapYoung:{short:"AAP (2016a)", full:"American Academy of Pediatrics, Council on Communications and Media. (2016). Media and young minds. <em>Pediatrics, 138</em>(5), e20162591."},
+  aapSchool:{short:"AAP (2016b)", full:"American Academy of Pediatrics, Council on Communications and Media. (2016). Media use in school-aged children and adolescents. <em>Pediatrics, 138</em>(5), e20162592."},
+  aapPlan:{short:"AAP Family Media Plan", full:"American Academy of Pediatrics. <em>Family Media Plan</em>. HealthyChildren.org."},
+  hirshpasek:{short:"Hirsh-Pasek dkk. (2015)", full:"Hirsh-Pasek, K., Zosh, J. M., Golinkoff, R. M., Gray, J. H., Robb, M. B., & Kaufman, J. (2015). Putting education in “educational” apps: Lessons from the science of learning. <em>Psychological Science in the Public Interest, 16</em>(1), 3–34."},
+  robinson:{short:"Robinson dkk. (2013)", full:"Robinson, E., Aveyard, P., Daley, A., Jolly, K., Lewis, A., Lycett, D., & Higgs, S. (2013). Eating attentively: A systematic review and meta-analysis of the effect of food intake memory and awareness on eating. <em>American Journal of Clinical Nutrition, 97</em>(4), 728–742."},
+  haleguan:{short:"Hale & Guan (2015)", full:"Hale, L., & Guan, S. (2015). Screen time and sleep among school-aged children and adolescents: A systematic literature review. <em>Sleep Medicine Reviews, 21</em>, 50–58."},
+  carter:{short:"Carter dkk. (2016)", full:"Carter, B., Rees, P., Hale, L., Bhattacharjee, D., & Paradkar, M. S. (2016). Association between portable screen-based media device access or use and sleep outcomes. <em>JAMA Pediatrics, 170</em>(12), 1202–1208."},
+  paruthi:{short:"Paruthi dkk. (2016)", full:"Paruthi, S., dkk. (2016). Recommended amount of sleep for pediatric populations: A consensus statement of the American Academy of Sleep Medicine. <em>Journal of Clinical Sleep Medicine, 12</em>(6), 785–786."},
+  exelmans:{short:"Exelmans & Van den Bulck (2016)", full:"Exelmans, L., & Van den Bulck, J. (2016). Bedtime mobile phone use and sleep in adults. <em>Social Science & Medicine, 148</em>, 93–101."},
+  radeskyCalm:{short:"Radesky dkk. (2016)", full:"Radesky, J. S., Peacock-Chambers, E., Zuckerman, B., & Silverstein, M. (2016). Use of mobile technology to calm upset children: Associations with social-emotional development. <em>JAMA Pediatrics, 170</em>(4), 397–399."},
+  radeskyMeal:{short:"Radesky dkk. (2014)", full:"Radesky, J. S., Kistin, C. J., Zuckerman, B., Nitzberg, K., Gross, J., Kaplan-Sanoff, M., Augustyn, M., & Silverstein, M. (2014). Patterns of mobile device use by caregivers and children during meals in fast food restaurants. <em>Pediatrics, 133</em>(4), e843–e849."},
+  radeskyChristakis:{short:"Radesky & Christakis (2016)", full:"Radesky, J. S., & Christakis, D. A. (2016). Increased screen time: Implications for early childhood development and behavior. <em>Pediatric Clinics of North America, 63</em>(5), 827–839."},
+  lillard:{short:"Lillard & Peterson (2011)", full:"Lillard, A. S., & Peterson, J. (2011). The immediate impact of different types of television on young children’s executive function. <em>Pediatrics, 128</em>(4), 644–649."},
+  romeo:{short:"Romeo dkk. (2018)", full:"Romeo, R. R., Leonard, J. A., Robinson, S. T., West, M. R., Mackey, A. P., Rowe, M. L., & Gabrieli, J. D. E. (2018). Beyond the 30-million-word gap: Children’s conversational exposure is associated with language-related brain function. <em>Psychological Science, 29</em>(5), 700–710."},
+  kuhl:{short:"Kuhl dkk. (2003)", full:"Kuhl, P. K., Tsao, F.-M., & Liu, H.-M. (2003). Foreign-language experience in infancy: Effects of short-term exposure and social interaction on phonetic learning. <em>Proceedings of the National Academy of Sciences, 100</em>(15), 9096–9101."},
+  hiniker:{short:"Hiniker dkk. (2016)", full:"Hiniker, A., Suh, H., Cao, S., & Kientz, J. A. (2016). Screen time tantrums: How families manage screen media experiences for toddlers and preschoolers. <em>Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems</em>, 648–660."},
+  ginsburg:{short:"Ginsburg (2007)", full:"Ginsburg, K. R. (2007). The importance of play in promoting healthy child development and maintaining strong parent-child bonds. <em>Pediatrics, 119</em>(1), 182–191."},
+  tremblay:{short:"Tremblay dkk. (2011)", full:"Tremblay, M. S., dkk. (2011). Systematic review of sedentary behaviour and health indicators in school-aged children and youth. <em>International Journal of Behavioral Nutrition and Physical Activity, 8</em>, 98."},
+  livHelsper:{short:"Livingstone & Helsper (2008)", full:"Livingstone, S., & Helsper, E. J. (2008). Parental mediation of children’s internet use. <em>Journal of Broadcasting & Electronic Media, 52</em>(4), 581–599."},
+  oecd:{short:"OECD (2021)", full:"OECD. (2021). <em>Children in the digital environment: Revised typology of risks</em>. OECD Digital Economy Papers, No. 302. Paris: OECD Publishing."},
+  pptunas:{short:"PP No. 17/2025", full:"Peraturan Pemerintah Republik Indonesia Nomor 17 Tahun 2025 tentang Tata Kelola Penyelenggaraan Sistem Elektronik dalam Pelindungan Anak (PP Tunas)."},
+  ward:{short:"Ward dkk. (2017)", full:"Ward, A. F., Duke, K., Gneezy, A., & Bos, M. W. (2017). Brain drain: The mere presence of one’s own smartphone reduces available cognitive capacity. <em>Journal of the Association for Consumer Research, 2</em>(2), 140–154."},
+  twenge:{short:"Twenge & Campbell (2018)", full:"Twenge, J. M., & Campbell, W. K. (2018). Associations between screen time and lower psychological well-being among children and adolescents. <em>Preventive Medicine Reports, 12</em>, 271–283."},
+  orben:{short:"Orben & Przybylski (2019)", full:"Orben, A., & Przybylski, A. K. (2019). The association between adolescent well-being and digital technology use. <em>Nature Human Behaviour, 3</em>, 173–182."},
+  vogel:{short:"Vogel dkk. (2014)", full:"Vogel, E. A., Rose, J. P., Roberts, L. R., & Eckles, K. (2014). Social comparison, social media, and self-esteem. <em>Psychology of Popular Media Culture, 3</em>(4), 206–222."},
+  hunt:{short:"Hunt dkk. (2018)", full:"Hunt, M. G., Marx, R., Lipson, C., & Young, J. (2018). No more FOMO: Limiting social media decreases loneliness and depression. <em>Journal of Social and Clinical Psychology, 37</em>(10), 751–768."},
+  kushlev:{short:"Kushlev & Dunn (2015)", full:"Kushlev, K., & Dunn, E. W. (2015). Checking email less frequently reduces stress. <em>Computers in Human Behavior, 43</em>, 220–228."},
+  przybylski:{short:"Przybylski & Weinstein (2013)", full:"Przybylski, A. K., & Weinstein, N. (2013). Can you connect with me now? How the presence of mobile communication technology influences face-to-face conversation quality. <em>Journal of Social and Personal Relationships, 30</em>(3), 237–246."},
+  yildirim:{short:"Yildirim & Correia (2015)", full:"Yildirim, C., & Correia, A.-P. (2015). Exploring the dimensions of nomophobia: Development and validation of a self-reported questionnaire. <em>Computers in Human Behavior, 49</em>, 130–137."},
+  nist:{short:"NIST SP 800-63B (2017)", full:"Grassi, P. A., dkk. (2017). <em>Digital identity guidelines: Authentication and lifecycle management</em> (NIST Special Publication 800-63B). National Institute of Standards and Technology."},
+  ito:{short:"Ito dkk. (2010)", full:"Ito, M., dkk. (2010). <em>Hanging out, messing around, and geeking out: Kids living and learning with new media</em>. Cambridge, MA: MIT Press. (Buku)"},
+  livBlum:{short:"Livingstone & Blum-Ross (2020)", full:"Livingstone, S., & Blum-Ross, A. (2020). <em>Parenting for a digital future: How hopes and fears about technology shape children’s lives</em>. New York: Oxford University Press. (Buku)"},
+  heitner:{short:"Heitner (2016)", full:"Heitner, D. (2016). <em>Screenwise: Helping kids thrive (and survive) in their digital world</em>. Brookline, MA: Bibliomotion. (Buku)"},
+  kamenetz:{short:"Kamenetz (2018)", full:"Kamenetz, A. (2018). <em>The art of screen time: How your family can balance digital media and real life</em>. New York: PublicAffairs. (Buku)"},
+  siegel:{short:"Siegel & Bryson (2011)", full:"Siegel, D. J., & Bryson, T. P. (2011). <em>The whole-brain child: 12 revolutionary strategies to nurture your child’s developing mind</em>. New York: Delacorte Press. (Buku)"},
+  faber:{short:"Faber & Mazlish (1980)", full:"Faber, A., & Mazlish, E. (1980). <em>How to talk so kids will listen & listen so kids will talk</em>. New York: Rawson, Wade. (Buku)"},
+  gray:{short:"Gray (2013)", full:"Gray, P. (2013). <em>Free to learn: Why unleashing the instinct to play will make our children happier, more self-reliant, and better students for life</em>. New York: Basic Books. (Buku)"},
+  steinberg:{short:"Steinberg (2014)", full:"Steinberg, L. (2014). <em>Age of opportunity: Lessons from the new science of adolescence</em>. Boston: Houghton Mifflin Harcourt. (Buku)"},
+  hinduja:{short:"Hinduja & Patchin (2015)", full:"Hinduja, S., & Patchin, J. W. (2015). <em>Bullying beyond the schoolyard: Preventing and responding to cyberbullying</em> (2nd ed.). Thousand Oaks, CA: Corwin. (Buku)"},
+  haidt:{short:"Haidt (2024)", full:"Haidt, J. (2024). <em>The anxious generation: How the great rewiring of childhood is causing an epidemic of mental illness</em>. New York: Penguin Press. (Buku)"},
+  newportDM:{short:"Newport (2019)", full:"Newport, C. (2019). <em>Digital minimalism: Choosing a focused life in a noisy world</em>. New York: Portfolio. (Buku)"},
+  newportDW:{short:"Newport (2016)", full:"Newport, C. (2016). <em>Deep work: Rules for focused success in a distracted world</em>. New York: Grand Central. (Buku)"},
+  clear:{short:"Clear (2018)", full:"Clear, J. (2018). <em>Atomic habits: An easy & proven way to build good habits & break bad ones</em>. New York: Avery. (Buku)"},
+  eyal:{short:"Eyal (2019)", full:"Eyal, N. (2019). <em>Indistractable: How to control your attention and choose your life</em>. Dallas: BenBella Books. (Buku)"},
+  mark:{short:"Mark (2023)", full:"Mark, G. (2023). <em>Attention span: A groundbreaking way to restore balance, happiness and productivity</em>. Toronto: Hanover Square Press. (Buku)"},
+  cirillo:{short:"Cirillo (2018)", full:"Cirillo, F. (2018). <em>The Pomodoro Technique: The life-changing time-management system</em>. New York: Currency. (Buku)"}
+};
+
+// Rujukan per pertanyaan (berdasarkan nama area di tiap kelompok usia)
+var REF_MAP = {
+  balita:{
+    "Durasi layar":["who2019","aapYoung"], "Pendampingan":["aapYoung","hirshpasek"], "Waktu makan":["robinson"],
+    "Tidur":["who2019","haleguan"], "Menenangkan":["radeskyCalm","siegel"], "Pilihan tayangan":["aapYoung","kamenetz"],
+    "Bermain aktif":["who2019","ginsburg"], "Interaksi langsung":["romeo","kuhl"], "Regulasi emosi":["hiniker","siegel"],
+    "Bermain mandiri":["ginsburg","gray"], "Jenis tayangan":["lillard"], "Batas waktu & tempat":["aapPlan","kamenetz"],
+    "Suasana hati":["radeskyChristakis"], "Tujuan pemakaian":["aapYoung","kamenetz"], "Teladan orang tua":["radeskyMeal"]
+  },
+  sd:{
+    "Durasi layar":["aapSchool","heitner"], "Aturan keluarga":["aapPlan","heitner"], "Tidur":["haleguan","carter"],
+    "Regulasi emosi":["siegel","kamenetz"], "Pengawasan konten":["livHelsper","livBlum"], "Pengaturan keamanan":["livHelsper","oecd"],
+    "Aktivitas offline":["who2020","tremblay"], "Batas usia platform":["pptunas","oecd"], "Komunikasi":["faber","livBlum"],
+    "Fokus":["ward"], "Belajar & berkarya":["hirshpasek","livBlum"], "Suasana hati":["siegel","twenge"],
+    "Menghadapi bosan":["gray","ginsburg"], "Pembelian dalam aplikasi":["oecd"], "Teladan orang tua":["radeskyMeal","heitner"]
+  },
+  remaja:{
+    "Durasi layar":["aapSchool","orben"], "Tidur":["paruthi","carter"], "Obrolan dunia online":["livBlum","heitner"],
+    "Privasi & keamanan akun":["livBlum","oecd"], "Keamanan online":["hinduja"], "Batas usia platform":["pptunas","haidt"],
+    "Aktivitas offline":["who2020","haidt"], "Kendali diri":["steinberg"], "Aturan bersama":["aapPlan","steinberg"],
+    "Fokus":["ward","cirillo"], "Suasana hati":["vogel","haidt"], "Pesan & grup chat":["kushlev"],
+    "Belajar & berkarya":["ito"], "Tujuan":["eyal"], "Teladan orang tua":["radeskyMeal","heitner"]
+  },
+  dewasa:{
+    "Durasi layar":["newportDM"], "Pagi hari":["newportDM","clear"], "Tidur":["exelmans"], "Fokus":["mark","ward"],
+    "Scroll tanpa tujuan":["clear","eyal"], "Perasaan":["hunt","vogel"], "Hubungan langsung":["przybylski"],
+    "Aktivitas offline":["who2020"], "Keamanan akun":["nist"], "Kesejahteraan":["newportDM","hunt"],
+    "Batas waktu & tempat":["newportDM","clear"], "Pesan & grup chat":["kushlev"], "Belajar & inspirasi":["clear"],
+    "Hal yang penting":["eyal","newportDW"], "Kendali diri":["yildirim"]
+  }
+};
+
+// Rujukan untuk teks kategori hasil
+var LEVEL_REFS = {
+  balita:["who2019","aapYoung","radeskyChristakis"],
+  sd:["aapSchool","livBlum","heitner"],
+  remaja:["aapSchool","orben","haidt"],
+  dewasa:["newportDM","hunt"]
+};
+
+(function attachRefs(){
+  for (var key in GROUPS){
+    GROUPS[key].key = key;
+    GROUPS[key].Q.forEach(function(q){ q.refs = (REF_MAP[key] && REF_MAP[key][q.area]) || []; });
+  }
+})();
+
+function shortRefs(keys){ return keys.map(function(k){ return REFS[k].short; }).join("; "); }
+
 var ORDER = ["balita","sd","remaja","dewasa"];
 var COLORS = ["var(--good)","var(--warn)","var(--alert)"];
 var LABELS = ["Seimbang","Perlu penyesuaian","Perlu perhatian lebih"];
@@ -424,8 +541,21 @@ function showResult(){
   $("res-text").textContent = lv.text;
   $("res-note").textContent = g.note;
 
+  var used = [];
+  function useRefs(keys){ keys.forEach(function(k){ if (used.indexOf(k) < 0) used.push(k); }); }
+  function addRefLine(el, keys){
+    if (!keys.length) return;
+    var r = document.createElement("small"); r.className = "tip-ref";
+    r.textContent = "Rujukan: " + shortRefs(keys);
+    el.appendChild(r); useRefs(keys);
+  }
+
+  var levelKeys = LEVEL_REFS[g.key] || [];
+  $("level-ref").textContent = levelKeys.length ? "Rujukan: " + shortRefs(levelKeys) : "";
+  useRefs(levelKeys);
+
   var list = $("tips"); list.innerHTML = "";
-  var weak = Q.map(function(q,k){ return {area:q.area, tip:q.tip, p:pts[k]}; })
+  var weak = Q.map(function(q,k){ return {area:q.area, tip:q.tip, refs:q.refs, p:pts[k]}; })
               .filter(function(x){ return x.p <= 1; })
               .sort(function(a,b){ return a.p - b.p; });
   if (weak.length){
@@ -434,7 +564,8 @@ function showResult(){
       var el = document.createElement("li");
       var t = document.createElement("b"); t.textContent = w.area;
       var s = document.createElement("span"); s.textContent = w.tip;
-      el.appendChild(t); el.appendChild(s); list.appendChild(el);
+      el.appendChild(t); el.appendChild(s); addRefLine(el, w.refs);
+      list.appendChild(el);
     });
   } else {
     $("tips-title").textContent = "Kekuatan Anda";
@@ -442,9 +573,17 @@ function showResult(){
       var el = document.createElement("li"); el.className = "strong";
       var t = document.createElement("b"); t.textContent = q.area;
       var s = document.createElement("span"); s.textContent = "Sudah berjalan sangat baik. Pertahankan.";
-      el.appendChild(t); el.appendChild(s); list.appendChild(el);
+      el.appendChild(t); el.appendChild(s); addRefLine(el, q.refs);
+      list.appendChild(el);
     });
   }
+
+  var rl = $("ref-list"); rl.innerHTML = "";
+  used.map(function(k){ return REFS[k]; })
+      .sort(function(a,b){ return a.full.localeCompare(b.full); })
+      .forEach(function(r){ var li = document.createElement("li"); li.innerHTML = r.full; rl.appendChild(li); });
+  $("ref-box").hidden = used.length === 0;
+  $("ref-box").open = false;
   show("result");
 }
 
