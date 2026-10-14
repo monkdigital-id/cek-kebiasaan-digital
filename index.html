@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cek Kebiasaan Digital Anak</title>
+<meta name="description" content="Kuis singkat untuk orang tua dan keluarga tentang kebiasaan digital anak, dari balita hingga dewasa muda, lengkap dengan saran praktis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap">
@@ -32,10 +33,17 @@ h2{font-family:var(--display); font-weight:700; font-size:21px; line-height:1.25
 .opts{display:grid; gap:10px}
 .opt{font:inherit; color:var(--ink); text-align:left; background:var(--surface); border:1.5px solid var(--line); border-radius:12px; padding:13px 16px; cursor:pointer; display:flex; gap:12px; align-items:center; transition:border-color .15s, background .15s}
 .opt:hover{border-color:var(--accent)}
-.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.opt:focus-visible,.btn:focus-visible,.age:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
 .opt.sel{border-color:var(--accent); background:var(--accent-soft)}
 .dot{flex:none; width:18px; height:18px; border-radius:50%; border:2px solid var(--line)}
 .opt.sel .dot{border-color:var(--accent); background:radial-gradient(var(--accent) 45%, transparent 50%)}
+.ages{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px}
+@media (max-width:420px){ .ages{grid-template-columns:1fr} }
+.age{font:inherit; color:var(--ink); text-align:left; background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:16px; cursor:pointer; display:flex; flex-direction:column; gap:2px; transition:border-color .15s, background .15s}
+.age:hover{border-color:var(--accent); background:var(--accent-soft)}
+.age b{font-family:var(--display); font-size:20px; line-height:1.2}
+.age span{font-size:14px; color:var(--muted)}
+.age em{font-style:normal; font-size:12px; font-weight:700; color:var(--accent); margin-top:4px}
 .nav{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
 .btn{font:inherit; font-weight:700; border-radius:10px; padding:10px 18px; cursor:pointer; border:1.5px solid var(--line); background:transparent; color:var(--ink)}
 .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
@@ -61,12 +69,18 @@ h3{font-family:var(--display); font-size:18px; margin:0}
 <body>
 <div class="wrap">
   <header id="top">
-    <div class="eyebrow">Untuk orang tua · anak usia ±3–12 tahun</div>
+    <div class="eyebrow" id="eyebrow">Untuk orang tua dan keluarga</div>
     <h1>Cek Kebiasaan Digital Anak</h1>
-    <p class="lead">10 pertanyaan singkat, sekitar 3 menit. Jawab sesuai kebiasaan sehari-hari dalam sebulan terakhir. Tidak ada jawaban benar atau salah, dan jawaban Anda tidak disimpan ke mana pun.</p>
+    <p class="lead" id="lead">10 pertanyaan singkat, sekitar 3 menit. Jawab sesuai kebiasaan sehari-hari dalam sebulan terakhir. Tidak ada jawaban benar atau salah, dan jawaban Anda tidak disimpan ke mana pun.</p>
   </header>
 
-  <section class="card" id="quiz" aria-live="polite">
+  <section class="card" id="start" aria-live="polite">
+    <h2>Pilih usia anak</h2>
+    <p class="note">Pertanyaan dan saran disesuaikan dengan tahap usia, karena kebutuhan balita sangat berbeda dengan remaja.</p>
+    <div class="ages" id="ages"></div>
+  </section>
+
+  <section class="card" id="quiz" hidden aria-live="polite">
     <div class="progress"><span id="count">1 / 10</span><div class="bar"><span id="fill" style="width:10%"></span></div></div>
     <div class="area" id="area"></div>
     <h2 id="q"></h2>
@@ -78,6 +92,7 @@ h3{font-family:var(--display); font-size:18px; margin:0}
   </section>
 
   <section class="card" id="result" hidden aria-live="polite">
+    <div class="area" id="res-group"></div>
     <div class="result-top">
       <div class="battery" aria-hidden="true"><span id="batt"></span></div>
       <div>
@@ -89,58 +104,221 @@ h3{font-family:var(--display); font-size:18px; margin:0}
     <p class="res-text" id="res-text"></p>
     <h3 id="tips-title">Area yang bisa diperkuat</h3>
     <ul class="tips" id="tips"></ul>
-    <p class="note">Kuis ini alat refleksi sederhana, bukan penilaian klinis. Jika Anda khawatir dengan perilaku, tidur, atau emosi anak, konsultasikan dengan dokter anak atau psikolog anak.</p>
-    <div class="nav"><button class="btn primary" id="again" type="button">Ulangi kuis</button></div>
+    <p class="note" id="res-note"></p>
+    <div class="nav">
+      <button class="btn" id="change" type="button">Ganti usia</button>
+      <button class="btn primary" id="again" type="button">Ulangi kuis</button>
+    </div>
   </section>
 </div>
 
 <script>
-var Q = [
-  {area:"Durasi layar", q:"Rata-rata berapa lama anak memakai gawai per hari di luar keperluan sekolah?",
-   o:["Kurang dari 1 jam","1–2 jam","2–4 jam","Lebih dari 4 jam"],
-   tip:"Sepakati batas harian bersama anak, misalnya maksimal 1 jam untuk usia prasekolah. Pakai timer yang terlihat anak supaya batasnya jelas, bukan terasa mendadak."},
-  {area:"Aturan keluarga", q:"Apakah ada waktu atau tempat bebas gawai di rumah (misalnya saat makan atau di kamar tidur)?",
-   o:["Ada dan dijalankan konsisten","Ada, tapi kadang dilanggar","Jarang diterapkan","Tidak ada aturan"],
-   tip:"Mulai dari satu aturan yang mudah: tidak ada gawai di meja makan. Aturan yang sedikit tapi konsisten lebih efektif daripada banyak aturan yang sering dilanggar."},
-  {area:"Tidur", q:"Seberapa sering anak memakai gawai dalam 1 jam sebelum tidur?",
-   o:["Tidak pernah","Kadang-kadang","Sering","Hampir setiap malam"],
-   tip:"Matikan layar minimal 1 jam sebelum tidur dan isi dengan membaca buku, bercerita, atau kegiatan tenang lain. Cahaya dan rangsangan layar membuat anak lebih sulit terlelap."},
-  {area:"Regulasi emosi", q:"Bagaimana reaksi anak saat waktu bermain gawai dihentikan?",
-   o:["Mudah berhenti","Sedikit protes","Marah atau merajuk","Tantrum besar"],
-   tip:"Beri peringatan 5 menit sebelum waktu habis dan tawarkan kegiatan lanjutan yang jelas. Transisi yang bisa diprediksi mengurangi ledakan emosi."},
-  {area:"Pengawasan konten", q:"Seberapa tahu Anda aplikasi, game, atau channel yang dipakai anak?",
-   o:["Tahu semua, sering melihat bersama","Tahu sebagian besar","Hanya sedikit","Tidak tahu"],
-   tip:"Luangkan 10–15 menit seminggu untuk menonton atau bermain bersama anak. Anda jadi tahu isinya, dan anak merasa Anda tertarik, bukan sekadar mengawasi."},
-  {area:"Pengaturan keamanan", q:"Apakah kontrol orang tua atau filter usia sudah aktif di gawai anak?",
-   o:["Aktif dan dicek berkala","Aktif, tapi jarang dicek","Tidak yakin","Belum diaktifkan"],
-   tip:"Aktifkan Google Family Link (Android) atau Screen Time (iPhone/iPad), serta Mode Terbatas di YouTube atau gunakan YouTube Kids. Cek ulang setiap kali ada aplikasi baru."},
-  {area:"Aktivitas offline", q:"Seberapa sering anak bermain di luar, berolahraga, atau punya hobi tanpa layar?",
-   o:["Setiap hari","Beberapa kali seminggu","Jarang","Hampir tidak pernah"],
-   tip:"Jadwalkan satu kegiatan tanpa layar setiap hari: bermain di halaman, menggambar, membantu memasak, atau kegiatan bersama keluarga. Anak lebih mudah lepas dari layar jika ada pilihan yang menarik."},
-  {area:"Kebiasaan pengasuhan", q:"Seberapa sering gawai dipakai untuk menenangkan anak saat bosan atau rewel?",
-   o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
-   tip:"Siapkan alternatif penenang, misalnya buku kecil, mainan sederhana, atau ajak anak menyebutkan perasaannya. Anak perlu belajar menghadapi rasa bosan tanpa selalu mencari layar."},
-  {area:"Komunikasi", q:"Jika anak melihat sesuatu yang membuatnya tidak nyaman di internet, apakah ia akan bercerita kepada Anda?",
-   o:["Ya, pasti","Mungkin","Ragu-ragu","Sepertinya tidak"],
-   tip:"Katakan dengan jelas bahwa anak tidak akan dimarahi atau gawainya langsung diambil jika ia bercerita. Rasa aman untuk bercerita adalah perlindungan terbaik."},
-  {area:"Teladan orang tua", q:"Seberapa sering Anda sendiri memakai HP saat makan atau sedang bersama anak?",
-   o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
-   tip:"Anak meniru apa yang dilihatnya. Coba taruh HP di tempat lain saat makan atau bermain bersama anak, dan jelaskan kepada anak bahwa Anda juga sedang berlatih."}
-];
+var NOTE_CHILD = "Kuis ini alat refleksi sederhana, bukan penilaian klinis. Jika Anda khawatir dengan perilaku, tidur, atau emosi anak, konsultasikan dengan dokter anak atau psikolog anak.";
+var NOTE_ADULT = "Kuis ini alat refleksi sederhana, bukan penilaian klinis. Jika penggunaan gawai terasa sulit dikendalikan atau mengganggu tidur, suasana hati, maupun kegiatan sehari-hari, pertimbangkan untuk berbicara dengan psikolog.";
 
-var LEVELS = [
-  {min:24, label:"Seimbang", color:"var(--good)", title:"Kebiasaan digital keluarga sudah sehat",
-   text:"Anak Anda punya batasan yang jelas dan dukungan yang baik. Pertahankan kebiasaan ini, dan sesuaikan aturan seiring anak bertambah usia."},
-  {min:15, label:"Perlu penyesuaian", color:"var(--warn)", title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat",
-   text:"Pilih satu atau dua area di bawah untuk diperbaiki lebih dulu. Perubahan kecil yang dijalankan konsisten selama 2–3 minggu biasanya lebih berhasil daripada mengubah semuanya sekaligus."},
-  {min:0, label:"Perlu perhatian lebih", color:"var(--alert)", title:"Penggunaan gawai mulai mendominasi keseharian anak",
-   text:"Ini kondisi yang umum dan bisa diperbaiki. Mulailah dari aturan keluarga dan waktu tidur, lalu ajak anak ikut menyusun aturannya supaya ia merasa dilibatkan."}
-];
+var GROUPS = {
+  balita: {
+    label:"Balita", range:"0–5 tahun", who:"Diisi orang tua",
+    eyebrow:"Untuk orang tua · anak usia 0–5 tahun", note:NOTE_CHILD,
+    levels:[
+      {title:"Kebiasaan digital si kecil sudah sehat", text:"Si kecil mendapat banyak waktu bermain dan berinteraksi langsung. Pertahankan, karena kebiasaan di usia ini menjadi dasar kebiasaan digitalnya kelak."},
+      {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk diperbaiki lebih dulu. Di usia balita, perubahan paling efektif datang dari rutinitas orang tua, bukan dari aturan yang dijelaskan kepada anak."},
+      {title:"Gawai mulai menggantikan waktu bermain dan interaksi", text:"Ini umum terjadi dan bisa diperbaiki. Mulailah dari waktu makan dan sebelum tidur, lalu ganti waktu layar sedikit demi sedikit dengan bermain dan bercakap-cakap bersama."}
+    ],
+    Q:[
+      {area:"Durasi layar", q:"Rata-rata berapa lama si kecil menonton atau bermain gawai per hari?",
+       o:["Tidak sama sekali, atau hanya video call","Kurang dari 30 menit","30 menit – 1 jam","Lebih dari 1 jam"],
+       tip:"Untuk anak di bawah 2 tahun, sebaiknya tanpa layar kecuali video call dengan keluarga. Untuk usia 2–5 tahun, batasi maksimal 1 jam per hari dengan tayangan yang sesuai usia."},
+      {area:"Pendampingan", q:"Saat si kecil menonton atau memakai gawai, apakah didampingi orang dewasa?",
+       o:["Selalu","Sering","Kadang-kadang","Jarang"],
+       tip:"Temani si kecil saat menonton dan ajak bicara tentang yang dilihatnya, misalnya \"Itu warna apa?\". Tontonan yang didampingi jauh lebih bermanfaat daripada menonton sendirian."},
+      {area:"Waktu makan", q:"Apakah gawai dipakai supaya si kecil mau makan?",
+       o:["Tidak pernah","Kadang-kadang","Sering","Hampir setiap makan"],
+       tip:"Jauhkan layar dari waktu makan. Anak yang makan sambil menonton kurang mengenali rasa kenyang. Ganti dengan mengobrol atau menyebut warna dan rasa makanan."},
+      {area:"Tidur", q:"Seberapa sering si kecil menonton dalam 1 jam sebelum tidur?",
+       o:["Tidak pernah","Kadang-kadang","Sering","Hampir setiap malam"],
+       tip:"Matikan layar minimal 1 jam sebelum tidur. Ganti dengan rutinitas tenang: mandi, membaca buku bergambar, dan bernyanyi pelan."},
+      {area:"Menenangkan", q:"Seberapa sering gawai dipakai untuk menenangkan si kecil saat rewel?",
+       o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
+       tip:"Balita sedang belajar mengenali dan menenangkan emosinya. Coba peluk, ajak bernapas pelan, atau alihkan ke mainan. Gawai yang selalu jadi penenang membuat anak sulit belajar keterampilan ini."},
+      {area:"Pilihan tayangan", q:"Siapa yang memilih tayangan atau aplikasi si kecil?",
+       o:["Selalu dipilih orang tua dan sesuai usia","Sebagian besar dipilih orang tua","Sering memilih sendiri","Dibiarkan berputar otomatis (autoplay)"],
+       tip:"Pilih sendiri tayangan yang sesuai usia, matikan autoplay, dan gunakan YouTube Kids dengan profil usia yang tepat. Tayangan yang lambat dan sederhana lebih baik untuk balita."},
+      {area:"Bermain aktif", q:"Seberapa sering si kecil bermain aktif (berlari, memanjat, bermain di luar)?",
+       o:["Setiap hari","Beberapa kali seminggu","Jarang","Hampir tidak pernah"],
+       tip:"Usahakan si kecil bergerak aktif setiap hari, misalnya bermain di halaman, menari bersama, atau bermain bola. Gerak aktif penting untuk perkembangan motorik dan kualitas tidur."},
+      {area:"Interaksi langsung", q:"Seberapa sering Anda membaca buku, bernyanyi, atau bercakap-cakap dengan si kecil tanpa gawai?",
+       o:["Setiap hari","Beberapa kali seminggu","Jarang","Hampir tidak pernah"],
+       tip:"Luangkan 10–15 menit setiap hari untuk membaca buku bergambar atau bercakap-cakap. Interaksi langsung adalah stimulasi bahasa terbaik, dan tidak bisa digantikan tayangan apa pun."},
+      {area:"Regulasi emosi", q:"Bagaimana reaksi si kecil saat gawai diambil atau tayangan dihentikan?",
+       o:["Mudah beralih","Sedikit protes","Menangis atau merajuk","Tantrum besar"],
+       tip:"Beri tanda sebelum berhenti, misalnya \"Satu video lagi, lalu kita main balok\". Siapkan kegiatan pengganti yang menarik supaya peralihannya terasa wajar."},
+      {area:"Teladan orang tua", q:"Seberapa sering Anda sendiri memakai HP saat bermain atau makan bersama si kecil?",
+       o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
+       tip:"Balita belajar paling banyak dari meniru. Taruh HP di tempat lain saat bermain atau makan bersama, dan berikan perhatian penuh walau hanya sebentar."}
+    ]
+  },
 
-var ans = Q.map(function(){ return null; });
-var i = 0;
+  sd: {
+    label:"Anak SD", range:"6–12 tahun", who:"Diisi orang tua",
+    eyebrow:"Untuk orang tua · anak usia 6–12 tahun", note:NOTE_CHILD,
+    levels:[
+      {title:"Kebiasaan digital keluarga sudah sehat", text:"Anak Anda punya batasan yang jelas dan dukungan yang baik. Pertahankan kebiasaan ini, dan sesuaikan aturan seiring anak bertambah usia."},
+      {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk diperbaiki lebih dulu. Perubahan kecil yang dijalankan konsisten selama 2–3 minggu biasanya lebih berhasil daripada mengubah semuanya sekaligus."},
+      {title:"Penggunaan gawai mulai mendominasi keseharian anak", text:"Ini kondisi yang umum dan bisa diperbaiki. Mulailah dari aturan keluarga dan waktu tidur, lalu ajak anak ikut menyusun aturannya supaya ia merasa dilibatkan."}
+    ],
+    Q:[
+      {area:"Durasi layar", q:"Rata-rata berapa lama anak memakai gawai per hari di luar keperluan sekolah?",
+       o:["Kurang dari 1 jam","1–2 jam","2–4 jam","Lebih dari 4 jam"],
+       tip:"Sepakati batas harian bersama anak, misalnya 1–2 jam di luar keperluan sekolah. Pakai timer yang terlihat anak supaya batasnya jelas, bukan terasa mendadak."},
+      {area:"Aturan keluarga", q:"Apakah ada waktu atau tempat bebas gawai di rumah (misalnya saat makan atau di kamar tidur)?",
+       o:["Ada dan dijalankan konsisten","Ada, tapi kadang dilanggar","Jarang diterapkan","Tidak ada aturan"],
+       tip:"Mulai dari satu aturan yang mudah: tidak ada gawai di meja makan. Aturan yang sedikit tapi konsisten lebih efektif daripada banyak aturan yang sering dilanggar."},
+      {area:"Tidur", q:"Seberapa sering anak memakai gawai dalam 1 jam sebelum tidur?",
+       o:["Tidak pernah","Kadang-kadang","Sering","Hampir setiap malam"],
+       tip:"Matikan layar minimal 1 jam sebelum tidur dan isi dengan membaca buku, bercerita, atau kegiatan tenang lain. Cahaya dan rangsangan layar membuat anak lebih sulit terlelap."},
+      {area:"Regulasi emosi", q:"Bagaimana reaksi anak saat waktu bermain gawai dihentikan?",
+       o:["Mudah berhenti","Sedikit protes","Marah atau merajuk","Tantrum besar"],
+       tip:"Beri peringatan 5 menit sebelum waktu habis dan tawarkan kegiatan lanjutan yang jelas. Transisi yang bisa diprediksi mengurangi ledakan emosi."},
+      {area:"Pengawasan konten", q:"Seberapa tahu Anda aplikasi, game, atau channel yang dipakai anak?",
+       o:["Tahu semua, sering melihat bersama","Tahu sebagian besar","Hanya sedikit","Tidak tahu"],
+       tip:"Luangkan 10–15 menit seminggu untuk menonton atau bermain bersama anak. Anda jadi tahu isinya, dan anak merasa Anda tertarik, bukan sekadar mengawasi."},
+      {area:"Pengaturan keamanan", q:"Apakah kontrol orang tua atau filter usia sudah aktif di gawai anak?",
+       o:["Aktif dan dicek berkala","Aktif, tapi jarang dicek","Tidak yakin","Belum diaktifkan"],
+       tip:"Aktifkan Google Family Link (Android) atau Screen Time (iPhone/iPad), serta Mode Terbatas di YouTube atau gunakan YouTube Kids. Cek ulang setiap kali ada aplikasi baru."},
+      {area:"Aktivitas offline", q:"Seberapa sering anak bermain di luar, berolahraga, atau punya hobi tanpa layar?",
+       o:["Setiap hari","Beberapa kali seminggu","Jarang","Hampir tidak pernah"],
+       tip:"Jadwalkan satu kegiatan tanpa layar setiap hari: bermain di halaman, menggambar, membantu memasak, atau kegiatan bersama keluarga. Anak lebih mudah lepas dari layar jika ada pilihan yang menarik."},
+      {area:"Kebiasaan pengasuhan", q:"Seberapa sering gawai dipakai untuk menenangkan anak saat bosan atau rewel?",
+       o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
+       tip:"Siapkan alternatif penenang, misalnya buku, mainan sederhana, atau ajak anak menyebutkan perasaannya. Anak perlu belajar menghadapi rasa bosan tanpa selalu mencari layar."},
+      {area:"Komunikasi", q:"Jika anak melihat sesuatu yang membuatnya tidak nyaman di internet, apakah ia akan bercerita kepada Anda?",
+       o:["Ya, pasti","Mungkin","Ragu-ragu","Sepertinya tidak"],
+       tip:"Katakan dengan jelas bahwa anak tidak akan dimarahi atau gawainya langsung diambil jika ia bercerita. Rasa aman untuk bercerita adalah perlindungan terbaik."},
+      {area:"Teladan orang tua", q:"Seberapa sering Anda sendiri memakai HP saat makan atau sedang bersama anak?",
+       o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
+       tip:"Anak meniru apa yang dilihatnya. Coba taruh HP di tempat lain saat makan atau bermain bersama anak, dan jelaskan kepada anak bahwa Anda juga sedang berlatih."}
+    ]
+  },
+
+  remaja: {
+    label:"Remaja", range:"13–17 tahun", who:"Diisi orang tua",
+    eyebrow:"Untuk orang tua · anak usia 13–17 tahun", note:NOTE_CHILD,
+    levels:[
+      {title:"Kebiasaan digital remaja Anda sudah sehat", text:"Remaja Anda punya keseimbangan yang baik dan hubungan yang terbuka dengan Anda. Pertahankan, dan beri kepercayaan lebih besar secara bertahap seiring ia makin dewasa."},
+      {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah, lalu bicarakan bersama remaja Anda. Di usia ini, aturan yang disepakati bersama jauh lebih dipatuhi daripada aturan yang ditetapkan sepihak."},
+      {title:"Gawai mulai mendominasi keseharian remaja Anda", text:"Ini umum terjadi dan bisa diperbaiki. Mulailah dari waktu tidur dan obrolan yang tidak menghakimi. Libatkan remaja Anda dalam mencari solusi supaya ia merasa dihargai, bukan diawasi."}
+    ],
+    Q:[
+      {area:"Durasi layar", q:"Rata-rata berapa lama remaja Anda memakai gawai per hari untuk hiburan (di luar keperluan sekolah)?",
+       o:["Kurang dari 2 jam","2–3 jam","3–5 jam","Lebih dari 5 jam"],
+       tip:"Ajak remaja Anda melihat sendiri laporan waktu layarnya (Digital Wellbeing di Android atau Screen Time di iPhone), lalu sepakati target bersama. Data dari HP-nya sendiri lebih meyakinkan daripada perkiraan orang tua."},
+      {area:"Tidur", q:"Di mana HP remaja Anda saat waktu tidur?",
+       o:["Diisi daya di luar kamar","Di kamar, tapi tidak dipakai","Kadang dipakai sampai larut","Sering begadang dengan HP"],
+       tip:"Sepakati HP diisi daya di luar kamar pada malam hari, dan berlakukan juga untuk orang tua supaya adil. Remaja butuh 8–10 jam tidur, dan notifikasi malam hari sangat mengganggunya."},
+      {area:"Media sosial", q:"Seberapa sering Anda mengobrol santai dengan remaja Anda tentang hal yang ia lihat atau unggah di media sosial?",
+       o:["Sering","Kadang-kadang","Jarang","Tidak pernah"],
+       tip:"Tanyakan dengan rasa ingin tahu, bukan menginterogasi, misalnya \"Lagi ramai apa di TikTok?\". Obrolan ringan yang rutin membuat remaja lebih terbuka saat menghadapi masalah serius."},
+      {area:"Privasi & keamanan akun", q:"Apakah pengaturan privasi akun media sosial remaja Anda sudah dibahas bersama?",
+       o:["Sudah, dan dicek bersama","Sebagian","Tidak yakin","Belum pernah"],
+       tip:"Duduk bersama dan cek pengaturan: akun privat, siapa yang bisa mengirim pesan, lokasi tidak dibagikan, dan verifikasi dua langkah aktif. Lakukan sebagai kerja sama, bukan pemeriksaan."},
+      {area:"Keamanan online", q:"Jika remaja Anda dirundung, diganggu, atau dihubungi orang asing secara online, apakah ia akan bercerita kepada Anda?",
+       o:["Ya, pasti","Mungkin","Ragu-ragu","Sepertinya tidak"],
+       tip:"Tegaskan bahwa ia tidak akan disalahkan atau kehilangan HP-nya jika bercerita. Remaja sering diam karena takut gawainya diambil, padahal rasa aman untuk bercerita adalah perlindungan utamanya."},
+      {area:"Sekolah & tanggung jawab", q:"Apakah penggunaan gawai mengganggu tugas sekolah atau tanggung jawab di rumah?",
+       o:["Tidak pernah","Kadang-kadang","Sering","Hampir selalu"],
+       tip:"Sepakati urutan sederhana: tugas dan kewajiban dulu, hiburan kemudian. Mode fokus atau \"Jangan Ganggu\" saat belajar juga membantu mengurangi godaan notifikasi."},
+      {area:"Aktivitas offline", q:"Seberapa sering remaja Anda berolahraga, punya hobi, atau bertemu teman secara langsung?",
+       o:["Hampir setiap hari","Beberapa kali seminggu","Jarang","Hampir tidak pernah"],
+       tip:"Dukung kegiatan yang ia minati, misalnya olahraga, musik, organisasi, atau kegiatan komunitas. Remaja lebih mudah lepas dari layar jika punya kegiatan nyata yang membuatnya merasa mampu dan diterima."},
+      {area:"Kendali diri", q:"Bagaimana reaksi remaja Anda saat diminta berhenti memakai gawai atau tidak bisa memakainya?",
+       o:["Tenang","Sedikit kesal","Marah","Sangat gelisah atau marah besar"],
+       tip:"Hindari mengambil HP secara mendadak. Sepakati batas waktu lebih dulu dan beri tanda sebelum waktunya habis. Jika reaksinya sering sangat kuat, bicarakan dengan konselor sekolah atau psikolog."},
+      {area:"Aturan bersama", q:"Bagaimana aturan gawai di keluarga Anda dibuat?",
+       o:["Disepakati bersama dan dijalankan","Dibuat orang tua, cukup dijalankan","Ada, tapi jarang dijalankan","Tidak ada aturan"],
+       tip:"Libatkan remaja Anda menyusun aturan, termasuk konsekuensinya jika dilanggar. Tuliskan dan tinjau ulang setiap beberapa bulan. Aturan yang ia ikut buat lebih mungkin ia jalankan."},
+      {area:"Teladan orang tua", q:"Seberapa sering Anda sendiri memakai HP saat makan atau sedang mengobrol dengan remaja Anda?",
+       o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
+       tip:"Remaja sangat peka terhadap standar ganda. Terapkan aturan yang sama untuk diri Anda, misalnya tanpa HP saat makan, supaya aturan keluarga terasa adil."}
+    ]
+  },
+
+  dewasa: {
+    label:"Dewasa muda", range:"18 tahun ke atas", who:"Diisi sendiri",
+    eyebrow:"Untuk usia 18 tahun ke atas · diisi sendiri", note:NOTE_ADULT,
+    levels:[
+      {title:"Kebiasaan digital Anda sudah sehat", text:"Anda memakai gawai dengan sadar dan tetap punya ruang untuk kegiatan lain. Pertahankan, dan jadilah contoh yang baik bagi adik atau anggota keluarga lain."},
+      {title:"Sudah cukup baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk dicoba selama 2–3 minggu. Perubahan kecil yang konsisten lebih bertahan daripada \"detoks digital\" besar yang hanya bertahan beberapa hari."},
+      {title:"Gawai mulai mengendalikan keseharian Anda", text:"Ini sangat umum dan bisa diperbaiki. Mulailah dari pagi dan malam hari: dua waktu ini paling menentukan kualitas tidur dan fokus Anda sepanjang hari."}
+    ],
+    Q:[
+      {area:"Durasi layar", q:"Rata-rata berapa lama Anda memakai gawai per hari untuk hiburan (di luar kerja atau kuliah)?",
+       o:["Kurang dari 2 jam","2–4 jam","4–6 jam","Lebih dari 6 jam"],
+       tip:"Cek laporan waktu layar di HP (Digital Wellbeing di Android atau Screen Time di iPhone). Pasang batas harian untuk 1–2 aplikasi yang paling banyak menyita waktu."},
+      {area:"Pagi hari", q:"Kapan biasanya Anda pertama kali membuka HP setelah bangun?",
+       o:["Lebih dari 30 menit setelah bangun","Dalam 30 menit","Langsung saat bangun","Bahkan terbangun malam untuk mengecek HP"],
+       tip:"Coba tunda membuka HP 30 menit setelah bangun. Pakai jam weker biasa supaya HP tidak perlu ada di samping tempat tidur."},
+      {area:"Tidur", q:"Seberapa sering Anda memakai HP di tempat tidur sampai larut malam?",
+       o:["Tidak pernah","Kadang-kadang","Sering","Hampir setiap malam"],
+       tip:"Aktifkan mode tidur otomatis di HP dan isi daya HP di luar kamar. Satu jam terakhir sebelum tidur bisa diisi dengan membaca buku atau kegiatan tenang lain."},
+      {area:"Fokus", q:"Seberapa sering notifikasi mengganggu fokus Anda saat bekerja atau belajar?",
+       o:["Jarang","Kadang-kadang","Sering","Hampir selalu"],
+       tip:"Matikan notifikasi untuk semua aplikasi kecuali yang penting, dan gunakan mode fokus saat bekerja atau belajar. Cek pesan pada waktu tertentu, bukan setiap kali ada bunyi."},
+      {area:"Scroll tanpa tujuan", q:"Seberapa sering Anda menggulir media sosial lebih lama dari yang Anda niatkan?",
+       o:["Jarang","Kadang-kadang","Sering","Hampir setiap kali"],
+       tip:"Pindahkan aplikasi media sosial dari layar utama, dan buka lewat browser jika perlu. Sedikit hambatan tambahan sudah cukup untuk mengurangi kebiasaan membuka tanpa sadar."},
+      {area:"Perasaan", q:"Bagaimana perasaan Anda biasanya setelah memakai media sosial?",
+       o:["Biasanya baik","Netral","Kadang buruk atau membandingkan diri","Sering buruk atau cemas"],
+       tip:"Berhenti mengikuti akun yang membuat Anda sering membandingkan diri, dan ikuti akun yang memberi ilmu atau inspirasi. Anda yang menentukan isi linimasa Anda."},
+      {area:"Hubungan langsung", q:"Seberapa sering Anda menghabiskan waktu bersama keluarga atau teman tanpa sibuk dengan HP?",
+       o:["Hampir setiap hari","Beberapa kali seminggu","Jarang","Hampir tidak pernah"],
+       tip:"Sepakati waktu tanpa HP bersama keluarga atau teman, misalnya saat makan bersama. Taruh HP di dalam tas atau ruangan lain supaya tidak tergoda mengecek."},
+      {area:"Aktivitas offline", q:"Seberapa sering Anda berolahraga atau menjalani hobi tanpa layar?",
+       o:["Hampir setiap hari","Beberapa kali seminggu","Jarang","Hampir tidak pernah"],
+       tip:"Jadwalkan satu kegiatan tanpa layar yang rutin, misalnya jalan pagi, olahraga, memasak, atau kegiatan komunitas. Kegiatan yang terjadwal lebih mudah dijalankan daripada yang menunggu ada waktu luang."},
+      {area:"Keamanan akun", q:"Apakah akun penting Anda (surel, media sosial, bank) sudah memakai verifikasi dua langkah dan kata sandi yang berbeda-beda?",
+       o:["Ya, semuanya","Sebagian besar","Hanya sedikit","Belum"],
+       tip:"Aktifkan verifikasi dua langkah, mulai dari surel dan WhatsApp, karena keduanya menjadi kunci untuk akun lain. Gunakan pengelola kata sandi supaya tidak perlu menghafal banyak kata sandi."},
+      {area:"Kendali diri", q:"Bagaimana perasaan Anda jika harus seharian tanpa HP?",
+       o:["Biasa saja","Sedikit tidak nyaman","Cukup gelisah","Sangat gelisah"],
+       tip:"Latih jeda kecil, misalnya keluar rumah sebentar tanpa membawa HP, lalu perpanjang perlahan. Rasa gelisah biasanya berkurang setelah beberapa kali dicoba."}
+    ]
+  }
+};
+
+var ORDER = ["balita","sd","remaja","dewasa"];
+var COLORS = ["var(--good)","var(--warn)","var(--alert)"];
+var LABELS = ["Seimbang","Perlu penyesuaian","Perlu perhatian lebih"];
+var MINS = [24,15,0];
+var DEFAULT_EYEBROW = "Untuk orang tua dan keluarga";
+var LEAD_PARENT = "10 pertanyaan singkat, sekitar 3 menit. Jawab sesuai kebiasaan sehari-hari dalam sebulan terakhir. Tidak ada jawaban benar atau salah, dan jawaban Anda tidak disimpan ke mana pun.";
+
+var g = null, Q = [], ans = [], i = 0;
 function $(id){ return document.getElementById(id); }
 function toTop(){ try { window.scrollTo(0,0); } catch(e){} }
+function show(id){ ["start","quiz","result"].forEach(function(s){ $(s).hidden = (s !== id); }); toTop(); }
+
+function buildAges(){
+  var box = $("ages");
+  ORDER.forEach(function(key){
+    var grp = GROUPS[key];
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "age"; b.id = "age-" + key;
+    var t = document.createElement("b"); t.textContent = grp.label;
+    var r = document.createElement("span"); r.textContent = grp.range;
+    var w = document.createElement("em"); w.textContent = grp.who;
+    b.appendChild(t); b.appendChild(r); b.appendChild(w);
+    b.onclick = function(){ pick(key); };
+    box.appendChild(b);
+  });
+}
+
+function pick(key){
+  g = GROUPS[key]; Q = g.Q;
+  ans = Q.map(function(){ return null; }); i = 0;
+  $("eyebrow").textContent = g.eyebrow;
+  render(); show("quiz");
+}
 
 function render(){
   var item = Q[i];
@@ -164,7 +342,7 @@ function render(){
     };
     box.appendChild(b);
   });
-  $("back").disabled = i === 0;
+  $("back").textContent = i === 0 ? "← Ganti usia" : "← Kembali";
   $("next").disabled = ans[i] === null;
   $("next").textContent = i === Q.length-1 ? "Lihat hasil →" : "Lanjut →";
 }
@@ -172,13 +350,16 @@ function render(){
 function showResult(){
   var pts = ans.map(function(a){ return 3 - a; });
   var total = pts.reduce(function(s,n){ return s+n; }, 0);
-  var lv = LEVELS.filter(function(l){ return total >= l.min; })[0];
+  var li = MINS.findIndex ? MINS.findIndex(function(m){ return total >= m; }) : (total>=24?0:total>=15?1:2);
+  var lv = g.levels[li];
+  $("res-group").textContent = g.label + " · " + g.range;
   $("score").textContent = total;
-  $("pill").textContent = lv.label; $("pill").style.background = lv.color;
-  $("batt").style.background = lv.color;
+  $("pill").textContent = LABELS[li]; $("pill").style.background = COLORS[li];
+  $("batt").style.background = COLORS[li];
   $("batt").style.width = Math.max(6, total/30*100) + "%";
   $("res-title").textContent = lv.title;
   $("res-text").textContent = lv.text;
+  $("res-note").textContent = g.note;
 
   var list = $("tips"); list.innerHTML = "";
   var weak = Q.map(function(q,k){ return {area:q.area, tip:q.tip, p:pts[k]}; })
@@ -187,28 +368,33 @@ function showResult(){
   if (weak.length){
     $("tips-title").textContent = "Area yang bisa diperkuat";
     weak.forEach(function(w){
-      var li = document.createElement("li");
+      var el = document.createElement("li");
       var t = document.createElement("b"); t.textContent = w.area;
       var s = document.createElement("span"); s.textContent = w.tip;
-      li.appendChild(t); li.appendChild(s); list.appendChild(li);
+      el.appendChild(t); el.appendChild(s); list.appendChild(el);
     });
   } else {
-    $("tips-title").textContent = "Kekuatan keluarga Anda";
+    $("tips-title").textContent = "Kekuatan Anda";
     Q.filter(function(q,k){ return pts[k] === 3; }).slice(0,4).forEach(function(q){
-      var li = document.createElement("li"); li.className = "strong";
+      var el = document.createElement("li"); el.className = "strong";
       var t = document.createElement("b"); t.textContent = q.area;
       var s = document.createElement("span"); s.textContent = "Sudah berjalan sangat baik. Pertahankan.";
-      li.appendChild(t); li.appendChild(s); list.appendChild(li);
+      el.appendChild(t); el.appendChild(s); list.appendChild(el);
     });
   }
-  $("quiz").hidden = true; $("result").hidden = false;
-  toTop();
+  show("result");
 }
 
-$("back").onclick = function(){ if (i > 0){ i--; render(); } };
+function backToStart(){
+  g = null; $("eyebrow").textContent = DEFAULT_EYEBROW; show("start");
+}
+
+$("back").onclick = function(){ if (i > 0){ i--; render(); } else { backToStart(); } };
 $("next").onclick = function(){ if (ans[i] === null) return; if (i < Q.length-1){ i++; render(); } else { showResult(); } };
-$("again").onclick = function(){ ans = Q.map(function(){ return null; }); i = 0; $("result").hidden = true; $("quiz").hidden = false; render(); toTop(); };
-render();
+$("again").onclick = function(){ ans = Q.map(function(){ return null; }); i = 0; render(); show("quiz"); };
+$("change").onclick = backToStart;
+$("lead").textContent = LEAD_PARENT;
+buildAges();
 </script>
 </body>
 </html>
