@@ -107,6 +107,7 @@ h3{font-family:var(--display); font-size:18px; margin:0}
 .tips.prio li{border-left-color:var(--alert); background:#fbefeb; padding:10px 12px 10px 14px; border-radius:0 10px 10px 0}
 .tip-theme{display:block; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:2px}
 .note{font-size:13px; color:var(--muted); margin:0}
+.usage{margin-top:14px; text-align:center}
 .tip-ref{display:block; margin-top:6px; font-size:12.5px; color:var(--muted)}
 .level-ref{font-size:12.5px; color:var(--muted); margin:-8px 0 0}
 .refs{margin:0; padding-left:18px; display:grid; gap:6px; font-size:12.5px; color:var(--muted)}
@@ -132,6 +133,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
     <h2>Pilih kelompok usia</h2>
     <p class="note">Untuk balita sampai remaja, kuis diisi oleh orang tua. Untuk usia 18 tahun ke atas, kuis diisi sendiri.</p>
     <div class="ages" id="ages"></div>
+    <p class="note usage" id="usage" hidden></p>
   </section>
 
   <section class="card" id="quiz" hidden aria-live="polite">
@@ -193,7 +195,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
     </div>
   </section>
 </div>
-<footer class="site">© monkdigital · Cek Kebiasaan Digital<span id="stat-note" hidden><br>Situs ini hanya menghitung jumlah kunjungan, tanpa data pribadi dan tanpa jawaban kuis.</span></footer>
+<footer class="site">© monkdigital · Cek Kebiasaan Digital<span id="stat-note" hidden><br>Situs ini hanya menghitung jumlah penggunaan, tanpa data pribadi dan tanpa jawaban kuis.</span></footer>
 
 <script>
 var NOTE_CHILD = "Kuis ini alat refleksi sederhana, bukan penilaian klinis. Jika Anda khawatir dengan perilaku, tidur, atau emosi anak, konsultasikan dengan dokter anak atau psikolog anak.";
@@ -513,7 +515,10 @@ var THEME_SENT = {
 // ---------- PENGATURAN ----------
 var SITE_URL = "https://monkdigital-id.github.io/cek-kebiasaan-digital/";
 var WA_NUMBER = "";      // nomor WhatsApp monkdigital, format 628xxxxxxxxxx (tanpa + dan spasi)
-var GOATCOUNTER = "";    // kode GoatCounter, misalnya "monkdigital" jika alamatnya monkdigital.goatcounter.com
+// Counter penggunaan (Google Apps Script). Hanya angka yang dicatat, tanpa jawaban dan tanpa data pribadi.
+var COUNTER_URL = "https://script.google.com/macros/s/AKfycbwWFyXOo5KesBO_fscRf3JL_VA2q7pjpkzEeU1sAxpvHvIkd0gUuwV7og8gzfjOAQ_-Fg/exec";
+var SURVEY_ID = "cek-kebiasaan-digital";
+var COUNTER_MIN = 100;   // angka baru ditampilkan setelah mencapai jumlah ini
 
 // ages: kelompok usia yang melihat buku ini. Tambahkan "dewasa" saat ebook untuk dewasa sudah siap.
 var PRODUCTS = [
@@ -596,6 +601,7 @@ function render(){
 }
 
 function showResult(){
+  counter({action:"hit", event:"selesai", age:g.key});
   var pts = ans.map(function(a){ return 3 - a; });
   var total = pts.reduce(function(s,n){ return s+n; }, 0);
   var max = Q.length*3;
@@ -788,15 +794,23 @@ $("change").onclick = backToStart;
 $("lead").textContent = LEAD_PARENT;
 buildAges();
 
-// Statistik kunjungan (aktif hanya jika GOATCOUNTER diisi)
-if (GOATCOUNTER){
-  try {
-    var gc = document.createElement("script");
-    gc.async = true; gc.src = "https://gc.zgo.at/count.js";
-    gc.setAttribute("data-goatcounter", "https://" + GOATCOUNTER + ".goatcounter.com/count");
-    document.body.appendChild(gc);
-    $("stat-note").hidden = false;
-  } catch(e){}
+// Counter penggunaan (aktif hanya jika COUNTER_URL diisi)
+function counter(params){
+  if (!COUNTER_URL || !window.fetch) return;
+  var q = "?survey=" + encodeURIComponent(SURVEY_ID);
+  for (var k in params) q += "&" + k + "=" + encodeURIComponent(params[k]);
+  fetch(COUNTER_URL + q).then(function(r){ return r.json(); }).then(function(d){
+    if (d && d.ok && d.total >= COUNTER_MIN){
+      $("usage").textContent = "Sudah digunakan " + d.total.toLocaleString("id-ID") + " kali.";
+      $("usage").hidden = false;
+    }
+  }).catch(function(){});
+}
+if (COUNTER_URL){
+  $("stat-note").hidden = false;
+  var seen = false;
+  try { seen = sessionStorage.getItem("cekd-visit") === "1"; sessionStorage.setItem("cekd-visit", "1"); } catch(e){}
+  counter(seen ? {} : {action:"hit", event:"kunjungan"});
 }
 </script>
 </body>
