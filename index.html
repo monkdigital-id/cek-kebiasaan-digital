@@ -8,7 +8,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="monkdigital">
 <meta property="og:title" content="Cek Kebiasaan Digital">
-<meta property="og:description" content="Kuis 5 menit untuk orang tua: kenali kebiasaan digital anak dan dapatkan saran praktis. Gratis, jawaban tidak disimpan.">
+<meta property="og:description" content="Kuis 5 menit untuk orang tua: kenali kebiasaan digital anak dan dapatkan saran praktis. Gratis, dan jawaban Anda tetap pribadi.">
 <meta property="og:url" content="https://monkdigital-id.github.io/cek-kebiasaan-digital/">
 <meta property="og:image" content="https://monkdigital-id.github.io/cek-kebiasaan-digital/og.png">
 <meta property="og:image:width" content="1200">
@@ -87,7 +87,9 @@ h3{font-family:var(--display); font-size:18px; margin:0}
 .wa-btn{justify-self:start; font-weight:700; color:#fff; background:#1f8f4e; text-decoration:none; padding:9px 16px; border-radius:10px}
 .wa-btn:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
 .products{display:grid; gap:10px}
-.products .lead-note{font-size:13px; color:var(--muted); margin:0}
+.products .lead-note{font-size:12.5px; color:var(--muted); margin:0}
+.products .pitch{margin:0; font-size:15px}
+.badge.pick{background:var(--accent); color:#fff}
 .product{border:1.5px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; gap:6px; background:var(--surface)}
 .product.featured{border-color:var(--accent); background:var(--accent-soft)}
 .product b{font-family:var(--display); font-size:16.5px; line-height:1.25}
@@ -123,7 +125,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
   <header id="top">
     <div class="eyebrow" id="eyebrow">Untuk orang tua dan keluarga</div>
     <h1>Cek Kebiasaan Digital</h1>
-    <p class="lead" id="lead">Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban tidak disimpan ke mana pun.</p>
+    <p class="lead" id="lead">Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban Anda bersifat pribadi dan tidak kami simpan.</p>
   </header>
 
   <section class="card" id="start" aria-live="polite">
@@ -166,13 +168,13 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
     <h3 id="tips-title">Area lain yang bisa diperkuat</h3>
     <ul class="tips" id="tips"></ul>
     <button class="more-btn" id="more-tips" type="button" hidden></button>
+    <section id="products-box">
+      <h3 id="products-title">Rekomendasi bacaan untuk Anda</h3>
+      <div class="products" id="products"></div>
+    </section>
     <section id="next-box" hidden>
       <h3>Cek lain yang relevan untuk Anda</h3>
       <div class="next-checks" id="next-checks"></div>
-    </section>
-    <section id="products-box">
-      <h3>Dari monkdigital</h3>
-      <div class="products" id="products"></div>
     </section>
     <div class="share-box">
       <b>Ajak keluarga dan teman mencoba</b>
@@ -514,9 +516,12 @@ var WA_NUMBER = "";      // nomor WhatsApp monkdigital, format 628xxxxxxxxxx (ta
 var GOATCOUNTER = "";    // kode GoatCounter, misalnya "monkdigital" jika alamatnya monkdigital.goatcounter.com
 
 var PRODUCTS = [
-  {id:"efek", title:"Efek Digital yang Tanpa Disadari pada Anak", desc:"Kenali dampak gadget pada tidur, emosi, fokus, dan keamanan anak.", free:true},
-  {id:"kembang", title:"Cara Mudah Mengembangkan Anak di Era Digital", desc:"Panduan praktis per tema kuis ini: aturan, emosi, keamanan, dan kebiasaan keluarga.", free:false},
-  {id:"sukses", title:"Anak Sukses di Era Digital", desc:"Kisah nyata anak yang sukses lewat keterampilan digital, dan peran orang tuanya.", free:false}
+  {id:"efek", title:"Efek Digital yang Tanpa Disadari pada Anak", free:true, cta:"Baca gratis",
+   desc:"Dampak gadget yang sering luput dari perhatian."},
+  {id:"kembang", title:"Cara Mudah Mengembangkan Anak di Era Digital", free:false, cta:"Kabari saya",
+   desc:"Dari hasil kuis ke kebiasaan baru di rumah."},
+  {id:"sukses", title:"Anak Sukses di Era Digital", free:false, cta:"Kabari saya",
+   desc:"Saat gadget menjadi jalan untuk berkembang."}
 ];
 
 var OTHER_CHECKS = {
@@ -533,7 +538,7 @@ var COLORS = ["var(--good)","var(--warn)","var(--alert)"];
 var LABELS = ["Seimbang","Perlu penyesuaian","Perlu perhatian lebih"];
 var PCTS = [0.8,0.5,0]; // batas kategori: 80% dan 50% dari skor maksimal
 var DEFAULT_EYEBROW = "Untuk orang tua dan keluarga";
-var LEAD_PARENT = "Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban tidak disimpan ke mana pun.";
+var LEAD_PARENT = "Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban Anda bersifat pribadi dan tidak kami simpan.";
 
 var g = null, Q = [], ans = [], i = 0;
 function $(id){ return document.getElementById(id); }
@@ -732,31 +737,32 @@ function showResult(){
 
   // Dari monkdigital (produk sendiri, terpisah dari saran dan rujukan)
   var pr = $("products"); pr.innerHTML = "";
-  var note = document.createElement("p"); note.className = "lead-note";
-  note.textContent = "Produk buatan monkdigital sendiri, terpisah dari saran dan rujukan di atas.";
-  pr.appendChild(note);
   var anyWeak = stats.some(function(x){ return x.si > 0; });
-  PRODUCTS.forEach(function(pd){
-    var featured = (pd.id === "efek" && li > 0) || (pd.id === "kembang" && anyWeak) || (pd.id === "sukses" && li === 0);
+  function isFeatured(pd){ return (pd.id === "efek" && li > 0) || (pd.id === "kembang" && anyWeak) || (pd.id === "sukses" && li === 0); }
+  PRODUCTS.slice().sort(function(a,b){ return isFeatured(b) - isFeatured(a); }).forEach(function(pd){
+    var featured = isFeatured(pd);
     var d = document.createElement("div"); d.className = "product" + (featured ? " featured" : "");
     var bd = document.createElement("div"); bd.className = "badges";
     if (pd.free){ var f = document.createElement("span"); f.className = "badge free"; f.textContent = "Gratis"; bd.appendChild(f); }
-    var sh = document.createElement("span"); sh.className = "badge"; sh.textContent = "Segera hadir"; bd.appendChild(sh);
-    if (featured){ var rc = document.createElement("span"); rc.className = "badge"; rc.textContent = "Cocok untuk hasil Anda"; bd.appendChild(rc); }
+    if (featured){ var rc = document.createElement("span"); rc.className = "badge pick"; rc.textContent = "Cocok untuk Anda"; bd.appendChild(rc); }
+    var sh = document.createElement("span"); sh.className = "badge"; sh.textContent = "Segera terbit"; bd.appendChild(sh);
     var t = document.createElement("b"); t.textContent = pd.title;
     var ds = document.createElement("p"); ds.textContent = pd.desc;
     d.appendChild(bd); d.appendChild(t); d.appendChild(ds);
     if (WA_NUMBER){
       var a = document.createElement("a"); a.target = "_blank"; a.rel = "noopener";
-      a.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo monkdigital, saya ingin dikabari saat buku \u201c" + pd.title + "\u201d tersedia.");
-      a.textContent = "Kabari saya";
+      a.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(pd.free ? "Halo monkdigital, saya ingin mendapatkan buku gratis \u201c" + pd.title + "\u201d." : "Halo monkdigital, saya ingin dikabari saat buku \u201c" + pd.title + "\u201d terbit.");
+      a.textContent = pd.cta;
       d.appendChild(a);
     }
     pr.appendChild(d);
   });
+  var foot = document.createElement("p"); foot.className = "lead-note";
+  foot.textContent = "Panduan praktis dari monkdigital, berbasis riset parenting, untuk keluarga Indonesia.";
+  pr.appendChild(foot);
 
   // Bagikan ke WhatsApp (tanpa detail jawaban)
-  var shareText = "Saya baru mencoba Cek Kebiasaan Digital untuk " + SHARE_LABEL[g.key] + " (" + g.range + "). Hasilnya: " + LABELS[li] + ". Gratis, hanya 5 menit, dan jawaban tidak disimpan. Coba juga: " + SITE_URL;
+  var shareText = "Saya baru mencoba Cek Kebiasaan Digital untuk " + SHARE_LABEL[g.key] + " (" + g.range + "). Hasilnya: " + LABELS[li] + ". Gratis, hanya 5 menit, dan jawabannya tetap pribadi. Coba juga: " + SITE_URL;
   $("wa-share").href = "https://wa.me/?text=" + encodeURIComponent(shareText);
 
   var rl = $("ref-list"); rl.innerHTML = "";
