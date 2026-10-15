@@ -14,6 +14,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://monkdigital-id.github.io/cek-kebiasaan-digital/">
+<meta name="theme-color" content="#2b7a6b">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,7 +89,6 @@ h3{font-family:var(--display); font-size:18px; margin:0}
 .wa-btn{justify-self:start; font-weight:700; color:#fff; background:#1f8f4e; text-decoration:none; padding:9px 16px; border-radius:10px}
 .wa-btn:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
 .products{display:grid; gap:10px}
-.products .lead-note{font-size:12.5px; color:var(--muted); margin:0}
 .products .pitch{margin:-4px 0 2px; font-size:14.5px; color:var(--muted)}
 .badge.pick{background:var(--accent); color:#fff}
 .product{border:1.5px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; gap:6px; background:var(--surface)}
@@ -117,7 +118,18 @@ details.ref-box summary{cursor:pointer; font-weight:700; font-size:14px; color:v
 details.ref-box summary:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
 details.ref-box .refs{margin-top:10px}
 footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13px; color:var(--muted)}
+.save-box{display:grid; gap:6px}
+.print-only{display:none}
 [hidden]{display:none!important}
+@media print{
+  body{background:#fff; padding:0; font-size:12.5px}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  header, #start, #quiz, .save-box, .share-box, #result .nav, .more-btn, .next-card a, .product a, footer.site{display:none!important}
+  .card{border:none; padding:0}
+  .print-only{display:block}
+  #tips li.extra[hidden]{display:block!important}
+  .tips li, .theme-row, .product, .next-card, .conclusion{break-inside:avoid}
+}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -131,7 +143,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
 
   <section class="card" id="start" aria-live="polite">
     <h2>Pilih kelompok usia</h2>
-    <p class="note">Untuk balita sampai remaja, kuis diisi oleh orang tua. Untuk usia 18 tahun ke atas, kuis diisi sendiri.</p>
+    <p class="note">Untuk balita sampai remaja, kuis diisi oleh orang tua. Untuk kategori Dewasa (18 tahun ke atas), kuis diisi sendiri.</p>
     <div class="ages" id="ages"></div>
     <p class="note usage" id="usage" hidden></p>
   </section>
@@ -148,6 +160,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
   </section>
 
   <section class="card" id="result" hidden aria-live="polite">
+    <p class="print-only note" id="print-head"></p>
     <div class="area" id="res-group"></div>
     <div class="result-top">
       <div class="battery" aria-hidden="true"><span id="batt"></span></div>
@@ -156,6 +169,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
         <span class="pill" id="pill"></span>
       </div>
     </div>
+    <p class="note" id="score-legend"></p>
     <h2 id="res-title"></h2>
     <p class="res-text" id="res-text"></p>
     <p class="level-ref" id="level-ref"></p>
@@ -178,6 +192,10 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
       <h3>Cek lain yang relevan untuk Anda</h3>
       <div class="next-checks" id="next-checks"></div>
     </section>
+    <div class="save-box">
+      <button class="more-btn" id="save-pdf" type="button">Simpan hasil (PDF)</button>
+      <p class="note">Pilih “Simpan sebagai PDF” di jendela cetak. Jika tombol tidak berfungsi di dalam WhatsApp, buka halaman ini di Chrome atau Safari.</p>
+    </div>
     <div class="share-box">
       <b>Ajak keluarga dan teman mencoba</b>
       <p>Bagikan kategori hasil dan tautan kuis. Jawaban Anda tidak ikut terkirim.</p>
@@ -270,7 +288,7 @@ var GROUPS = {
     Q:[
       {theme:"waktu", area:"Durasi layar", q:"Rata-rata berapa lama anak memakai gadget per hari di luar keperluan sekolah?",
        o:["Kurang dari 1 jam", "1–2 jam", "2–4 jam", "Lebih dari 4 jam"],
-       tip:"Sepakati batas harian bersama anak, misalnya 1–2 jam di luar sekolah. Gunakan pengatur waktu (timer) yang bisa dilihat anak.", refs:["aapSchool", "heitner"]},
+       tip:"Sepakati batas harian bersama anak, idealnya kurang dari 1 jam dan tidak lebih dari 2 jam di luar keperluan sekolah. Gunakan pengatur waktu (timer) yang bisa dilihat anak.", refs:["aapSchool", "heitner"]},
       {theme:"waktu", area:"Tidur", q:"Seberapa sering anak memakai gadget dalam 1 jam sebelum tidur?",
        o:["Tidak pernah", "Kadang-kadang", "Sering", "Hampir setiap malam"],
        tip:"Matikan layar 1 jam sebelum tidur, lalu ganti dengan kegiatan membaca atau bercerita.", refs:["haleguan", "carter"]},
@@ -374,10 +392,10 @@ var GROUPS = {
   },
 
   dewasa: {
-    label:"Dewasa muda", range:"18 tahun ke atas", who:"Diisi sendiri",
+    label:"Dewasa", range:"18 tahun ke atas", who:"Diisi sendiri",
     eyebrow:"Untuk usia 18 tahun ke atas · diisi sendiri", note:NOTE_ADULT,
     levels:[
-      {title:"Kebiasaan digital Anda sudah sehat", text:"Anda memakai gadget dengan sadar dan tetap punya ruang untuk kegiatan lain. Pertahankan, dan jadilah contoh yang baik bagi adik atau anggota keluarga lain."},
+      {title:"Kebiasaan digital Anda sudah sehat", text:"Anda memakai gadget dengan sadar dan tetap punya ruang untuk kegiatan lain. Pertahankan, dan jadilah contoh yang baik bagi anak dan anggota keluarga lain."},
       {title:"Sudah cukup baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk dicoba selama 2–3 minggu. Perubahan kecil yang konsisten lebih bertahan daripada \"detoks digital\" besar yang hanya bertahan beberapa hari."},
       {title:"Gadget mulai mengendalikan keseharian Anda", text:"Kondisi ini sangat umum dan bisa diperbaiki. Mulailah dari pagi dan malam hari: dua waktu ini paling menentukan kualitas tidur dan fokus Anda sepanjang hari."}
     ],
@@ -480,7 +498,6 @@ var REFS = {
   hinduja:{short:"Hinduja & Patchin (2015)", full:"Hinduja, S., & Patchin, J. W. (2015). <em>Bullying beyond the schoolyard: Preventing and responding to cyberbullying</em> (2nd ed.). Thousand Oaks, CA: Corwin. (Buku)"},
   haidt:{short:"Haidt (2024)", full:"Haidt, J. (2024). <em>The anxious generation: How the great rewiring of childhood is causing an epidemic of mental illness</em>. New York: Penguin Press. (Buku)"},
   newportDM:{short:"Newport (2019)", full:"Newport, C. (2019). <em>Digital minimalism: Choosing a focused life in a noisy world</em>. New York: Portfolio. (Buku)"},
-  newportDW:{short:"Newport (2016)", full:"Newport, C. (2016). <em>Deep work: Rules for focused success in a distracted world</em>. New York: Grand Central. (Buku)"},
   clear:{short:"Clear (2018)", full:"Clear, J. (2018). <em>Atomic habits: An easy & proven way to build good habits & break bad ones</em>. New York: Avery. (Buku)"},
   eyal:{short:"Eyal (2019)", full:"Eyal, N. (2019). <em>Indistractable: How to control your attention and choose your life</em>. Dallas: BenBella Books. (Buku)"},
   mark:{short:"Mark (2023)", full:"Mark, G. (2023). <em>Attention span: A groundbreaking way to restore balance, happiness and productivity</em>. Toronto: Hanover Square Press. (Buku)"},
@@ -507,11 +524,18 @@ function shortRefs(keys){ return keys.map(function(k){ return REFS[k].short; }).
 var THEMES = {waktu:"Waktu & batas", emosi:"Emosi & kesejahteraan", keamanan:"Keamanan & perlindungan", kualitas:"Kualitas penggunaan", keluarga:"Keluarga & kehidupan nyata"};
 var THEME_SENT = {
   waktu:{kuat:"Batas waktu dan rutinitas gadget sudah jelas dan dijalankan, sehingga tidur dan kegiatan lain tetap terjaga.", lemah:"Penggunaan gadget belum memiliki batas waktu dan tempat yang jelas, sehingga mudah menyita waktu tidur, makan, dan kegiatan lain."},
-  emosi:{kuat:"Penggunaan gadget tidak banyak mengganggu suasana hati dan kemampuan mengendalikan diri.", lemah:"Gadget mulai memengaruhi suasana hati, misalnya menjadi rewel, cemas, atau sulit berhenti."},
-  keamanan:{kuat:"Perlindungan sudah berlapis: pengaturan perangkat aktif dan ada rasa aman untuk bercerita.", lemah:"Perlindungan masih longgar, sehingga risiko konten atau kontak yang tidak aman lebih besar."},
+  emosi:{kuat:"Penggunaan gadget tidak banyak mengganggu suasana hati dan kemampuan mengendalikan diri.", lemah:"Gadget mulai memengaruhi suasana hati, misalnya mudah marah, murung, cemas, atau sulit berhenti."},
+  keamanan:{kuat:"Perlindungan sudah berlapis: perangkat dan akun sudah diatur, dan pemakaiannya dipantau.", lemah:"Perlindungan masih longgar, sehingga risiko konten, kontak, atau pembelian yang tidak aman lebih besar."},
   kualitas:{kuat:"Gadget lebih banyak dipakai untuk hal yang bermanfaat dan dengan tujuan yang jelas.", lemah:"Gadget lebih sering dipakai tanpa tujuan, misalnya menonton atau scrolling untuk mengisi waktu."},
   keluarga:{kuat:"Keseharian diisi waktu bersama, aktivitas fisik, dan teladan yang baik.", lemah:"Waktu bersama dan kegiatan nyata mulai tergeser oleh layar."}
 };
+// Pengganti khusus kategori Dewasa (diisi sendiri)
+var THEME_SENT_ADULT = {
+  emosi:{kuat:"Penggunaan gadget tidak banyak mengganggu suasana hati, dan Anda cukup mampu mengendalikan diri.", lemah:"Gadget mulai memengaruhi suasana hati, misalnya membuat cemas, lelah, atau sulit lepas dari HP."},
+  keamanan:{kuat:"Anda cukup waspada terhadap hoaks, penipuan online, dan jejak digital.", lemah:"Kewaspadaan terhadap hoaks, penipuan online, dan jejak digital masih perlu ditingkatkan."},
+  keluarga:{kuat:"Keseharian Anda diisi waktu bersama orang terdekat dan kegiatan tanpa layar.", lemah:"Waktu bersama orang terdekat dan kegiatan tanpa layar mulai tergeser oleh HP."}
+};
+function themeSent(th){ return (g && g.key === "dewasa" && THEME_SENT_ADULT[th]) || THEME_SENT[th]; }
 // ---------- PENGATURAN ----------
 var SITE_URL = "https://monkdigital-id.github.io/cek-kebiasaan-digital/";
 var WA_NUMBER = "";      // nomor WhatsApp monkdigital, format 628xxxxxxxxxx (tanpa + dan spasi)
@@ -534,7 +558,7 @@ var OTHER_CHECKS = {
   polaAsuh:{name:"Cek Pola Asuh Anak", url:"https://monkdigital-id.github.io/cek-pola-asuh/"},
   minatBakat:{name:"Cek Minat dan Bakat", url:"https://monkdigital-id.github.io/cek-minat-bakat/"}
 };
-var SHARE_LABEL = {balita:"balita", sd:"anak SD", remaja:"remaja", dewasa:"dewasa muda"};
+var SHARE_LABEL = {balita:"balita", sd:"anak SD", remaja:"remaja", dewasa:"dewasa"};
 var SUBJECT = {balita:"si kecil", sd:"anak", remaja:"remaja Anda", dewasa:"Anda"};
 var THEME_ORDER = ["waktu","emosi","keamanan","kualitas","keluarga"];
 var THEME_LABELS = ["Kuat","Cukup","Perlu diperkuat"];
@@ -546,7 +570,7 @@ var PCTS = [0.8,0.5,0]; // batas kategori: 80% dan 50% dari skor maksimal
 var DEFAULT_EYEBROW = "Untuk orang tua dan keluarga";
 var LEAD_PARENT = "Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban Anda bersifat pribadi dan tidak kami simpan.";
 
-var g = null, Q = [], ans = [], i = 0;
+var g = null, Q = [], ans = [], i = 0, advTimer = null;
 function $(id){ return document.getElementById(id); }
 function toTop(){ try { window.scrollTo(0,0); } catch(e){} }
 function show(id){ ["start","quiz","result"].forEach(function(s){ $(s).hidden = (s !== id); }); toTop(); }
@@ -571,6 +595,7 @@ function pick(key){
   ans = Q.map(function(){ return null; }); i = 0;
   $("eyebrow").textContent = g.eyebrow;
   render(); show("quiz");
+  try { if (!(history.state && history.state.cek)) history.pushState({cek:1}, ""); } catch(e){}
 }
 
 function render(){
@@ -590,8 +615,10 @@ function render(){
     var label = document.createElement("span"); label.textContent = text;
     b.appendChild(dot); b.appendChild(label);
     b.onclick = function(){
+      clearTimeout(advTimer);
       ans[i] = k; render();
-      setTimeout(function(){ if (i < Q.length-1){ i++; render(); } }, 220);
+      var from = i;
+      advTimer = setTimeout(function(){ if (i === from && i < Q.length-1){ i++; render(); } }, 220);
     };
     box.appendChild(b);
   });
@@ -613,6 +640,8 @@ function showResult(){
   $("pill").textContent = LABELS[li]; $("pill").style.background = COLORS[li];
   $("batt").style.background = COLORS[li];
   $("batt").style.width = Math.max(6, total/max*100) + "%";
+  var t1 = Math.ceil(max*PCTS[0]), t2 = Math.ceil(max*PCTS[1]);
+  $("score-legend").textContent = "Skor " + t1 + "–" + max + ": " + LABELS[0] + " · " + t2 + "–" + (t1-1) + ": " + LABELS[1] + " · 0–" + (t2-1) + ": " + LABELS[2];
   $("res-title").textContent = lv.title;
   $("res-text").textContent = lv.text;
   $("res-note").textContent = g.note;
@@ -668,8 +697,9 @@ function showResult(){
 
   var list = $("tips"); list.innerHTML = "";
   var plist = $("prio"); plist.innerHTML = "";
-  var weak = Q.map(function(q,k){ return {theme:q.theme, area:q.area, tip:q.tip, refs:q.refs, p:pts[k], k:k}; })
-              .filter(function(x){ return x.p <= 1; })
+  var items = Q.map(function(q,k){ return {theme:q.theme, area:q.area, tip:q.tip, refs:q.refs, p:pts[k], k:k}; });
+  var cut = items.some(function(x){ return x.p <= 1; }) ? 1 : 2; // jika tidak ada jawaban lemah, saran diambil dari jawaban yang belum maksimal
+  var weak = items.filter(function(x){ return x.p <= cut; })
               .sort(function(a,b){ return a.p - b.p || ((b.theme === worst.th) - (a.theme === worst.th)) || a.k - b.k; });
   var prio = weak.filter(function(x){ return x.p === 0; }).slice(0,2);
   var rest = weak.filter(function(x){ return prio.indexOf(x) < 0; });
@@ -696,16 +726,16 @@ function showResult(){
   // Kesimpulan
   var cp = $("concl-text"); cp.innerHTML = "";
   function add(t, bold){ var n = bold ? document.createElement("b") : document.createTextNode(t); if (bold) n.textContent = t; cp.appendChild(n); }
-  function lc(t){ return t.charAt(0).toLowerCase() + t.slice(1); }
+  function lc(t){ return /^Anda\b/.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1); } // "Anda" tetap kapital
   var allStrong = stats.every(function(x){ return x.si === 0; });
   if (best.si === 0){
-    add("Kekuatan utama ada pada "); add(THEMES[best.th], true); add(": " + lc(THEME_SENT[best.th].kuat) + " ");
+    add("Kekuatan utama ada pada "); add(THEMES[best.th], true); add(": " + lc(themeSent(best.th).kuat) + " ");
   }
   if (allStrong){
     add(g.key === "dewasa" ? "Semua tema sudah berjalan baik. Pertahankan kebiasaan baik ini." : "Semua tema sudah berjalan baik. Pertahankan kebiasaan ini, dan sesuaikan aturannya seiring bertambahnya usia anak.");
   } else {
-    add("Yang paling perlu perhatian adalah "); add(THEMES[worst.th], true); add(": " + lc(THEME_SENT[worst.th].lemah) + " ");
-    var first = weak.filter(function(x){ return x.theme === worst.th; })[0] || weak[0];
+    add("Yang paling perlu perhatian adalah "); add(THEMES[worst.th], true); add(": " + lc(themeSent(worst.th).lemah) + " ");
+    var first = weak[0];
     if (first){
       var mFirst = first.tip.match(/^.*?[.?!]”?(?=\s|$)/);
       var firstSentence = mFirst ? mFirst[0] : first.tip;
@@ -733,7 +763,9 @@ function showResult(){
       card(OTHER_CHECKS.polaAsuh, "Skor total belum mencapai kategori Seimbang. Kebiasaan digital anak sangat dipengaruhi pola asuh di rumah. Kenali pola asuh Anda untuk menemukan pendekatan yang paling cocok.");
     }
   }
-  if (isWeak("kualitas")){
+  if (g.key === "dewasa"){
+    // Cek lain saat ini dirancang untuk anak, jadi tidak ditampilkan untuk Dewasa
+  } else if (isWeak("kualitas")){
     card(OTHER_CHECKS.minatBakat, "Gadget lebih sering dipakai untuk mengisi waktu. Mengenali minat dan bakat " + subj + " membantu mengarahkan waktu layar ke kegiatan yang benar-benar bermanfaat.");
   } else if (belowTop){
     card(OTHER_CHECKS.minatBakat, "Mengenali minat dan bakat " + subj + " membantu mengganti sebagian waktu layar dengan kegiatan yang lebih bermanfaat dan menyenangkan.");
@@ -783,14 +815,47 @@ function showResult(){
   show("result");
 }
 
+$("save-pdf").onclick = function(){
+  var d = new Date();
+  $("print-head").textContent = "Cek Kebiasaan Digital · monkdigital-id.github.io/cek-kebiasaan-digital · " + d.toLocaleDateString("id-ID", {day:"numeric", month:"long", year:"numeric"});
+  var rb = $("ref-box"), wasOpen = rb.open; rb.open = true;
+  try { window.print(); } catch(e){}
+  rb.open = wasOpen;
+};
+
 function backToStart(){
   g = null; $("eyebrow").textContent = DEFAULT_EYEBROW; show("start");
 }
 
-$("back").onclick = function(){ if (i > 0){ i--; render(); } else { backToStart(); } };
-$("next").onclick = function(){ if (ans[i] === null) return; if (i < Q.length-1){ i++; render(); } else { showResult(); } };
+// Tombol kembali di HP: mundur satu langkah di dalam kuis, bukan keluar dari situs
+var leaving = false;
+function goStart(){
+  clearTimeout(advTimer);
+  try { if (history.state && history.state.cek){ leaving = true; history.back(); return; } } catch(e){}
+  backToStart();
+}
+window.addEventListener("popstate", function(){
+  if (leaving){ leaving = false; backToStart(); return; }
+  if (!$("quiz").hidden && i > 0){
+    clearTimeout(advTimer); i--; render();
+    try { history.pushState({cek:1}, ""); } catch(e){}
+  } else if (!$("start").hidden){
+    // sudah di halaman awal: biarkan browser kembali seperti biasa
+  } else {
+    backToStart();
+  }
+});
+$("back").onclick = function(){ clearTimeout(advTimer); if (i > 0){ i--; render(); } else { goStart(); } };
+$("next").onclick = function(){
+  clearTimeout(advTimer);
+  if (ans[i] === null) return;
+  if (i < Q.length-1){ i++; render(); return; }
+  var miss = ans.indexOf(null);
+  if (miss >= 0){ i = miss; render(); return; } // pastikan semua pertanyaan terjawab
+  showResult();
+};
 $("again").onclick = function(){ ans = Q.map(function(){ return null; }); i = 0; render(); show("quiz"); };
-$("change").onclick = backToStart;
+$("change").onclick = goStart;
 $("lead").textContent = LEAD_PARENT;
 buildAges();
 
