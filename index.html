@@ -4,7 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cek Kebiasaan Digital</title>
-<meta name="description" content="Kenali kebiasaan digital anak, remaja, atau diri sendiri dalam 5 menit. Pilih usia, jawab 15 pertanyaan, dan dapatkan saran praktis yang bisa langsung dicoba.">
+<meta name="description" content="Kenali kebiasaan digital anak, remaja, atau diri sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan, dan dapatkan saran praktis yang bisa langsung dicoba.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="monkdigital">
+<meta property="og:title" content="Cek Kebiasaan Digital">
+<meta property="og:description" content="Kuis 5 menit untuk orang tua: kenali kebiasaan digital anak dan dapatkan saran praktis. Gratis, jawaban tidak disimpan.">
+<meta property="og:url" content="https://monkdigital-id.github.io/cek-kebiasaan-digital/">
+<meta property="og:image" content="https://monkdigital-id.github.io/cek-kebiasaan-digital/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap">
@@ -70,6 +80,22 @@ h3{font-family:var(--display); font-size:18px; margin:0}
 .next-card p{margin:0; font-size:14.5px; color:var(--muted)}
 .next-card a{justify-self:start; font-weight:700; color:#fff; background:var(--accent); text-decoration:none; padding:8px 14px; border-radius:10px; margin-top:4px}
 .next-card a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.more-btn{font:inherit; font-weight:700; color:var(--accent); background:transparent; border:1.5px solid var(--accent); border-radius:10px; padding:8px 14px; cursor:pointer; justify-self:start}
+.more-btn:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.share-box{border:1.5px dashed var(--accent); border-radius:14px; padding:14px 16px; display:grid; gap:8px}
+.share-box p{margin:0; font-size:14.5px; color:var(--muted)}
+.wa-btn{justify-self:start; font-weight:700; color:#fff; background:#1f8f4e; text-decoration:none; padding:9px 16px; border-radius:10px}
+.wa-btn:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.products{display:grid; gap:10px}
+.products .lead-note{font-size:13px; color:var(--muted); margin:0}
+.product{border:1.5px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; gap:6px; background:var(--surface)}
+.product.featured{border-color:var(--accent); background:var(--accent-soft)}
+.product b{font-family:var(--display); font-size:16.5px; line-height:1.25}
+.product p{margin:0; font-size:14px; color:var(--muted)}
+.badges{display:flex; gap:6px; flex-wrap:wrap}
+.badge{font-size:11.5px; font-weight:700; padding:2px 9px; border-radius:99px; background:var(--line); color:var(--ink)}
+.badge.free{background:var(--good); color:#fff}
+.product a{justify-self:start; font-weight:700; color:var(--accent); text-decoration:none; border:1.5px solid var(--accent); padding:7px 13px; border-radius:10px; margin-top:2px}
 .themes{list-style:none; margin:0; padding:0; display:grid; gap:12px}
 .theme-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 12px; align-items:center}
 .theme-name{font-weight:700; font-size:14.5px}
@@ -97,7 +123,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
   <header id="top">
     <div class="eyebrow" id="eyebrow">Untuk orang tua dan keluarga</div>
     <h1>Cek Kebiasaan Digital</h1>
-    <p class="lead" id="lead">Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban tidak disimpan ke mana pun.</p>
+    <p class="lead" id="lead">Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban tidak disimpan ke mana pun.</p>
   </header>
 
   <section class="card" id="start" aria-live="polite">
@@ -139,10 +165,20 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
     <ul class="tips prio" id="prio"></ul>
     <h3 id="tips-title">Area lain yang bisa diperkuat</h3>
     <ul class="tips" id="tips"></ul>
+    <button class="more-btn" id="more-tips" type="button" hidden></button>
     <section id="next-box" hidden>
       <h3>Cek lain yang relevan untuk Anda</h3>
       <div class="next-checks" id="next-checks"></div>
     </section>
+    <section id="products-box">
+      <h3>Dari monkdigital</h3>
+      <div class="products" id="products"></div>
+    </section>
+    <div class="share-box">
+      <b>Ajak keluarga dan teman mencoba</b>
+      <p>Bagikan kategori hasil dan tautan kuis. Jawaban Anda tidak ikut terkirim.</p>
+      <a class="wa-btn" id="wa-share" href="#" target="_blank" rel="noopener">Bagikan ke WhatsApp</a>
+    </div>
     <details class="ref-box" id="ref-box">
       <summary>Daftar rujukan</summary>
       <ol class="refs" id="ref-list"></ol>
@@ -155,7 +191,7 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
     </div>
   </section>
 </div>
-<footer class="site">© monkdigital · Cek Kebiasaan Digital</footer>
+<footer class="site">© monkdigital · Cek Kebiasaan Digital<span id="stat-note" hidden><br>Situs ini hanya menghitung jumlah kunjungan, tanpa data pribadi dan tanpa jawaban kuis.</span></footer>
 
 <script>
 var NOTE_CHILD = "Kuis ini alat refleksi sederhana, bukan penilaian klinis. Jika Anda khawatir dengan perilaku, tidur, atau emosi anak, konsultasikan dengan dokter anak atau psikolog anak.";
@@ -166,56 +202,56 @@ var GROUPS = {
     label:"Balita", range:"0–5 tahun", who:"Diisi orang tua",
     eyebrow:"Untuk orang tua · anak usia 0–5 tahun", note:NOTE_CHILD,
     levels:[
-      {title:"Kebiasaan digital si kecil sudah sehat", text:"Si kecil mendapat banyak waktu bermain dan berinteraksi langsung. Pertahankan, karena kebiasaan di usia ini menjadi dasar kebiasaan digitalnya kelak."},
-      {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk diperbaiki lebih dulu. Di usia balita, perubahan paling efektif datang dari rutinitas orang tua, bukan dari aturan yang dijelaskan kepada anak."},
-      {title:"Gadget mulai menggantikan waktu bermain dan interaksi", text:"Ini umum terjadi dan bisa diperbaiki. Mulailah dari waktu makan dan sebelum tidur, lalu ganti waktu layar sedikit demi sedikit dengan bermain dan bercakap-cakap bersama."}
+      {title:"Kebiasaan digital si kecil sudah sehat", text:"Si kecil mendapat banyak waktu bermain dan berinteraksi langsung. Pertahankan, karena kebiasaan pada usia ini menjadi dasar kebiasaan digitalnya kelak."},
+      {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk diperbaiki lebih dulu. Pada usia balita, perubahan paling efektif datang dari rutinitas orang tua, bukan dari aturan yang dijelaskan kepada anak."},
+      {title:"Gadget mulai menggantikan waktu bermain dan interaksi", text:"Kondisi ini umum terjadi dan bisa diperbaiki. Mulailah dari waktu makan dan sebelum tidur, lalu ganti waktu layar sedikit demi sedikit dengan bermain dan bercakap-cakap bersama."}
     ],
     Q:[
       {theme:"waktu", area:"Durasi layar", q:"Rata-rata berapa lama si kecil menonton atau bermain gadget per hari?",
        o:["Tidak sama sekali, atau hanya video call", "Kurang dari 1 jam", "1–2 jam", "Lebih dari 2 jam"],
-       tip:"Di bawah 2 tahun, sebaiknya tanpa layar kecuali video call keluarga. Usia 2–5 tahun, maksimal 1 jam per hari dengan tayangan sesuai usia.", refs:["who2019", "aapYoung"]},
+       tip:"Anak di bawah 2 tahun sebaiknya tidak menonton layar, kecuali untuk video call dengan keluarga. Untuk usia 2–5 tahun, batasi maksimal 1 jam per hari dengan tayangan yang sesuai usia.", refs:["who2019", "aapYoung"]},
       {theme:"waktu", area:"Tidur", q:"Seberapa sering si kecil menonton dalam 1 jam sebelum tidur?",
        o:["Tidak pernah", "Kadang-kadang", "Sering", "Hampir setiap malam"],
-       tip:"Matikan layar 1 jam sebelum tidur, lalu ganti dengan mandi, buku bergambar, dan lagu pelan.", refs:["who2019", "haleguan"]},
-      {theme:"waktu", area:"Waktu makan", q:"Apakah gadget dipakai supaya si kecil mau makan?",
-       o:["Tidak pernah", "Kadang-kadang", "Sering", "Hampir setiap makan"],
-       tip:"Jauhkan layar saat makan agar si kecil belajar mengenali rasa kenyang. Ajak mengobrol tentang warna dan rasa makanannya.", refs:["robinson"]},
-      {theme:"waktu", area:"Aturan & batas", q:"Apakah ada waktu atau tempat yang selalu bebas gadget untuk si kecil (misalnya kamar tidur atau di kendaraan)?",
+       tip:"Matikan layar 1 jam sebelum tidur, lalu ganti dengan rutinitas yang menenangkan: mandi, membaca buku bergambar, dan bernyanyi pelan.", refs:["who2019", "haleguan"]},
+      {theme:"waktu", area:"Aturan & batas", q:"Apakah ada waktu atau tempat yang selalu bebas gadget untuk si kecil (misalnya di kamar tidur atau di kendaraan)?",
        o:["Ada dan selalu dijalankan", "Ada, tapi kadang dilanggar", "Jarang diterapkan", "Tidak ada"],
-       tip:"Tentukan satu tempat dan satu waktu bebas gadget, lalu jalankan konsisten. Batas yang tetap membuat si kecil berhenti meminta di setiap kesempatan.", refs:["aapPlan", "kamenetz"]},
+       tip:"Tentukan satu tempat dan satu waktu bebas gadget, lalu jalankan secara konsisten. Batas yang konsisten membuat si kecil tidak terus meminta gadget di setiap kesempatan.", refs:["aapPlan", "kamenetz"]},
       {theme:"emosi", area:"Reaksi saat berhenti", q:"Bagaimana reaksi si kecil saat gadget diambil atau tayangan dihentikan?",
        o:["Mudah beralih, atau tidak memakai gadget", "Sedikit protes", "Menangis atau merajuk", "Tantrum besar"],
        tip:"Beri tanda sebelum berhenti, misalnya “Satu video lagi, lalu kita main balok.” Siapkan kegiatan pengganti yang menarik.", refs:["hiniker", "siegel"]},
       {theme:"emosi", area:"Suasana hati", q:"Setelah menonton atau memakai gadget, bagaimana biasanya suasana hati si kecil?",
        o:["Tetap tenang, atau si kecil tidak menonton", "Sedikit rewel", "Sering rewel atau terlalu aktif", "Hampir selalu sulit ditenangkan"],
-       tip:"Kurangi tayangan atau waktu yang membuat si kecil rewel. Akhiri waktu layar dengan pelukan atau membaca buku bersama.", refs:["radeskyChristakis"]},
-      {theme:"keamanan", area:"Pengaturan keamanan", q:"Apakah si kecil bisa membuka HP atau tablet dan memilih aplikasi sendiri tanpa sepengetahuan Anda?",
-       o:["Tidak, perangkat terkunci atau memakai profil anak", "Jarang, biasanya Anda tahu", "Kadang bisa membuka sendiri", "Sering membuka sendiri tanpa diawasi"],
-       tip:"Kunci perangkat dengan PIN dan pakai profil anak atau YouTube Kids. Balita belum bisa membedakan konten yang aman dan tidak.", refs:["aapYoung", "oecd"]},
-      {theme:"kualitas", area:"Pilihan tayangan", q:"Tayangan si kecil kebanyakan seperti apa?",
-       o:["Tidak menonton, atau tenang dan mendidik (lagu, cerita, mengenal benda)", "Sebagian besar mendidik", "Campuran, banyak hiburan cepat", "Kebanyakan hiburan cepat, atau dibiarkan berputar otomatis (autoplay)"],
-       tip:"Pilih sendiri tayangan bertempo lambat, matikan autoplay, dan pakai YouTube Kids. Tayangan yang cepat dan heboh membuat balita sulit tenang.", refs:["aapYoung", "lillard"]},
-      {theme:"kualitas", area:"Gadget sebagai penenang", q:"Seberapa sering gadget dipakai untuk menenangkan si kecil saat rewel atau untuk mengisi waktu?",
+       tip:"Kurangi jenis tayangan atau waktu menonton yang membuat si kecil rewel. Akhiri waktu layar dengan pelukan atau membaca buku bersama.", refs:["radeskyChristakis"]},
+      {theme:"emosi", area:"Gadget sebagai penenang", q:"Seberapa sering gadget dipakai untuk menenangkan si kecil saat rewel atau untuk mengisi waktu?",
        o:["Jarang, atau tidak memberikan gadget", "Kadang-kadang", "Sering", "Hampir selalu"],
-       tip:"Saat si kecil rewel, coba peluk, ajak bernapas pelan, atau alihkan ke mainan lebih dulu. Gadget yang selalu jadi penenang membuat anak sulit belajar menenangkan diri.", refs:["radeskyCalm", "siegel"]},
-      {theme:"keluarga", area:"Pendampingan", q:"Saat si kecil menonton atau memakai gadget, apakah didampingi orang dewasa?",
+       tip:"Saat si kecil rewel, coba peluk, ajak bernapas pelan, atau alihkan perhatiannya ke mainan lebih dulu. Gadget yang selalu jadi penenang membuat anak sulit belajar menenangkan diri.", refs:["radeskyCalm", "siegel"]},
+      {theme:"keamanan", area:"Pengaturan keamanan", q:"Apakah si kecil bisa membuka HP atau tablet dan memilih aplikasi sendiri tanpa sepengetahuan Anda?",
+       o:["Tidak, perangkat terkunci atau memakai profil anak", "Jarang, dan biasanya saya tahu", "Kadang bisa membuka sendiri", "Sering membuka sendiri tanpa diawasi"],
+       tip:"Kunci perangkat dengan PIN dan pakai profil anak atau YouTube Kids. Balita belum bisa membedakan konten yang aman dan yang tidak.", refs:["aapYoung", "oecd"]},
+      {theme:"keamanan", area:"Pendampingan", q:"Saat si kecil menonton atau memakai gadget, apakah ia didampingi orang dewasa?",
        o:["Selalu, atau si kecil tidak memakai gadget", "Sering", "Kadang-kadang", "Jarang"],
-       tip:"Temani si kecil saat menonton dan ajak bicara tentang yang dilihatnya, misalnya “Itu warna apa?”", refs:["aapYoung", "hirshpasek"]},
+       tip:"Temani si kecil saat menonton dan ajak ia membicarakan apa yang dilihatnya, misalnya “Itu warna apa?”", refs:["aapYoung", "hirshpasek"]},
+      {theme:"keamanan", area:"Berbagi foto si kecil", q:"Seberapa sering Anda membagikan foto atau video si kecil di media sosial yang bisa dilihat publik?",
+       o:["Tidak pernah, atau hanya ke keluarga dekat", "Kadang-kadang, dengan akun privat", "Sering, kadang di akun publik", "Sering di akun publik, termasuk lokasinya"],
+       tip:"Bagikan foto si kecil hanya ke keluarga dekat atau lewat akun privat, dan jangan sertakan lokasi. Jejak digital anak dimulai dari unggahan orang tuanya.", refs:["steinbergSB", "livBlum"]},
+      {theme:"kualitas", area:"Pilihan tayangan", q:"Tayangan si kecil kebanyakan seperti apa?",
+       o:["Tidak menonton, atau tayangannya tenang dan mendidik (lagu, cerita, mengenal benda)", "Sebagian besar mendidik", "Campuran, banyak hiburan cepat", "Kebanyakan hiburan cepat, atau dibiarkan berputar otomatis (autoplay)"],
+       tip:"Pilih sendiri tayangan bertempo lambat, matikan autoplay, dan pakai YouTube Kids. Tayangan yang cepat dan heboh membuat balita sulit tenang.", refs:["aapYoung", "lillard"]},
+      {theme:"kualitas", area:"TV menyala di latar", q:"Seberapa sering TV atau video menyala sebagai latar saat si kecil bermain, meskipun tidak sedang ditonton?",
+       o:["Jarang", "Kadang-kadang", "Sering", "Hampir sepanjang hari"],
+       tip:"Matikan TV atau video yang tidak sedang ditonton. Suara latar membuat si kecil kurang fokus bermain dan mengurangi percakapannya dengan orang tua.", refs:["kirkorian"]},
+      {theme:"kualitas", area:"Gadget saat makan", q:"Apakah gadget dipakai supaya si kecil mau makan?",
+       o:["Tidak pernah", "Kadang-kadang", "Sering", "Hampir setiap makan"],
+       tip:"Jauhkan layar saat makan agar si kecil belajar mengenali rasa kenyang. Ajak ia mengobrol tentang warna dan rasa makanannya.", refs:["robinson"]},
       {theme:"keluarga", area:"Waktu bersama", q:"Seberapa sering Anda membaca buku, bernyanyi, atau bercakap-cakap dengan si kecil tanpa gadget?",
        o:["Setiap hari", "Beberapa kali seminggu", "Jarang", "Hampir tidak pernah"],
-       tip:"Luangkan 10–15 menit setiap hari untuk membaca atau bercakap-cakap. Ini stimulasi bahasa terbaik dan tidak tergantikan tayangan apa pun.", refs:["romeo", "kuhl"]},
-      {theme:"keluarga", area:"Paparan latar", q:"Seberapa sering TV atau video menyala di latar saat si kecil bermain, walau tidak sedang ditonton?",
-       o:["Jarang", "Kadang-kadang", "Sering", "Hampir sepanjang hari"],
-       tip:"Matikan TV atau video yang tidak sedang ditonton. Suara latar mengurangi fokus bermain si kecil dan percakapan dengan orang tua.", refs:["kirkorian"]},
-      {theme:"keluarga", area:"Aktivitas offline", q:"Seberapa sering si kecil bermain aktif (berlari, memanjat, bermain di luar)?",
+       tip:"Luangkan 10–15 menit setiap hari untuk membaca atau bercakap-cakap. Kegiatan ini adalah stimulasi bahasa terbaik dan tidak tergantikan oleh tayangan apa pun.", refs:["romeo", "kuhl"]},
+      {theme:"keluarga", area:"Kegiatan tanpa layar", q:"Seberapa sering si kecil bermain aktif (berlari, memanjat, bermain di luar)?",
        o:["Setiap hari", "Beberapa kali seminggu", "Jarang", "Hampir tidak pernah"],
-       tip:"Ajak si kecil bergerak aktif setiap hari, misalnya bermain di halaman, menari, atau bermain bola.", refs:["who2019", "ginsburg"]},
-      {theme:"keluarga", area:"Menghadapi bosan", q:"Seberapa sering si kecil bisa asyik bermain cukup lama tanpa layar (misalnya dengan balok, krayon, atau boneka)?",
-       o:["Sering", "Kadang-kadang", "Jarang", "Hampir tidak pernah"],
-       tip:"Sediakan mainan sederhana seperti balok dan krayon. Biarkan si kecil sesekali bosan, karena dari situ tumbuh kreativitas.", refs:["ginsburg", "gray"]},
+       tip:"Ajak si kecil bergerak aktif setiap hari, misalnya bermain di halaman, menari, atau bermain bola. Sediakan juga mainan sederhana seperti balok dan krayon untuk bermain sendiri.", refs:["who2019", "ginsburg", "gray"]},
       {theme:"keluarga", area:"Teladan orang tua", q:"Seberapa sering Anda sendiri memakai HP saat bermain atau makan bersama si kecil?",
        o:["Jarang", "Kadang-kadang", "Sering", "Hampir selalu"],
-       tip:"Taruh HP di tempat lain saat bermain atau makan bersama, dan beri perhatian penuh walau sebentar. Balita belajar dari meniru.", refs:["radeskyMeal"]}
+       tip:"Taruh HP di tempat lain saat bermain atau makan bersama, dan berikan perhatian penuh walaupun hanya sebentar. Balita belajar dengan meniru.", refs:["radeskyMeal"]}
     ]
   },
 
@@ -225,51 +261,51 @@ var GROUPS = {
     levels:[
       {title:"Kebiasaan digital keluarga sudah sehat", text:"Anak Anda punya batasan yang jelas dan dukungan yang baik. Pertahankan kebiasaan ini, dan sesuaikan aturan seiring anak bertambah usia."},
       {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk diperbaiki lebih dulu. Perubahan kecil yang dijalankan konsisten selama 2–3 minggu biasanya lebih berhasil daripada mengubah semuanya sekaligus."},
-      {title:"Penggunaan gadget mulai mendominasi keseharian anak", text:"Ini kondisi yang umum dan bisa diperbaiki. Mulailah dari aturan keluarga dan waktu tidur, lalu ajak anak ikut menyusun aturannya supaya ia merasa dilibatkan."}
+      {title:"Penggunaan gadget mulai mendominasi keseharian anak", text:"Kondisi ini umum terjadi dan bisa diperbaiki. Mulailah dari aturan keluarga dan waktu tidur, lalu ajak anak ikut menyusun aturannya supaya ia merasa dilibatkan."}
     ],
     Q:[
       {theme:"waktu", area:"Durasi layar", q:"Rata-rata berapa lama anak memakai gadget per hari di luar keperluan sekolah?",
        o:["Kurang dari 1 jam", "1–2 jam", "2–4 jam", "Lebih dari 4 jam"],
-       tip:"Sepakati batas harian bersama anak, misalnya 1–2 jam di luar sekolah. Pakai timer yang terlihat anak.", refs:["aapSchool", "heitner"]},
+       tip:"Sepakati batas harian bersama anak, misalnya 1–2 jam di luar sekolah. Gunakan pengatur waktu (timer) yang bisa dilihat anak.", refs:["aapSchool", "heitner"]},
       {theme:"waktu", area:"Tidur", q:"Seberapa sering anak memakai gadget dalam 1 jam sebelum tidur?",
        o:["Tidak pernah", "Kadang-kadang", "Sering", "Hampir setiap malam"],
-       tip:"Matikan layar 1 jam sebelum tidur, lalu ganti dengan membaca atau bercerita.", refs:["haleguan", "carter"]},
+       tip:"Matikan layar 1 jam sebelum tidur, lalu ganti dengan kegiatan membaca atau bercerita.", refs:["haleguan", "carter"]},
       {theme:"waktu", area:"Aturan & batas", q:"Apakah ada waktu atau tempat bebas gadget di rumah (misalnya saat makan atau di kamar tidur)?",
-       o:["Ada dan dijalankan konsisten", "Ada, tapi kadang dilanggar", "Jarang diterapkan", "Tidak ada aturan"],
-       tip:"Mulai dari satu aturan mudah, misalnya tanpa gadget di meja makan, lalu jalankan konsisten.", refs:["aapPlan", "heitner"]},
+       o:["Ada dan dijalankan secara konsisten", "Ada, tapi kadang dilanggar", "Jarang diterapkan", "Tidak ada aturan"],
+       tip:"Mulailah dari satu aturan yang mudah, misalnya tidak ada gadget di meja makan, lalu jalankan secara konsisten.", refs:["aapPlan", "heitner"]},
       {theme:"emosi", area:"Reaksi saat berhenti", q:"Bagaimana reaksi anak saat waktu bermain gadget dihentikan?",
        o:["Mudah berhenti", "Sedikit protes", "Marah atau merajuk", "Tantrum besar"],
        tip:"Beri peringatan 5 menit sebelum waktu habis dan siapkan kegiatan lanjutan yang jelas.", refs:["siegel", "kamenetz"]},
       {theme:"emosi", area:"Suasana hati", q:"Setelah memakai gadget, bagaimana biasanya suasana hati anak?",
        o:["Ceria atau tenang", "Biasa saja", "Kadang mudah marah atau murung", "Sering mudah marah atau murung"],
        tip:"Ajak anak mengenali perasaannya, misalnya “Habis main game tadi, kamu senang atau kesal?”", refs:["siegel", "twenge"]},
+      {theme:"emosi", area:"Menghadapi bosan", q:"Saat merasa bosan, apakah anak bisa mencari kegiatan sendiri tanpa gadget?",
+       o:["Hampir selalu", "Sering", "Kadang-kadang", "Hampir tidak pernah"],
+       tip:"Buat bersama anak daftar 10 kegiatan tanpa layar untuk dilakukan saat bosan, lalu tempelkan di dinding.", refs:["gray", "ginsburg"]},
       {theme:"keamanan", area:"Pengaturan keamanan", q:"Apakah kontrol orang tua atau filter usia sudah aktif di gadget anak?",
        o:["Aktif dan dicek berkala", "Aktif, tapi jarang dicek", "Tidak yakin", "Belum diaktifkan"],
-       tip:"Aktifkan Google Family Link atau Screen Time, serta YouTube Kids. Cek ulang setiap ada aplikasi baru.", refs:["livHelsper", "oecd"]},
-      {theme:"keamanan", area:"Batas usia platform", q:"Apakah anak punya akun sendiri di media sosial atau platform yang belum sesuai usianya (misalnya TikTok, Instagram, YouTube biasa, atau Roblox)?",
+       tip:"Aktifkan Google Family Link atau Screen Time, dan gunakan YouTube Kids. Periksa kembali setiap kali ada aplikasi baru.", refs:["livHelsper", "oecd"]},
+      {theme:"keamanan", area:"Batas usia media sosial", q:"Apakah anak punya akun sendiri di media sosial atau platform yang belum sesuai usianya (misalnya TikTok, Instagram, YouTube biasa, atau Roblox)?",
        o:["Tidak, hanya aplikasi khusus anak", "Memakai akun orang tua dan selalu didampingi", "Punya akun sendiri, kadang diawasi", "Punya akun sendiri tanpa pengawasan"],
-       tip:"Sesuai PP Tunas, anak di bawah 16 tahun belum boleh punya akun di platform berisiko tinggi seperti TikTok, Instagram, YouTube, dan Roblox. Pakai aplikasi khusus anak dan dampingi.", refs:["pptunas", "oecd"]},
+       tip:"Sesuai PP Tunas, anak di bawah 16 tahun belum boleh memiliki akun di platform berisiko tinggi seperti TikTok, Instagram, YouTube, dan Roblox. Gunakan aplikasi khusus anak dan dampingi saat memakainya.", refs:["pptunas", "oecd"]},
       {theme:"keamanan", area:"Pembelian dalam aplikasi", q:"Jika anak bermain game atau memakai aplikasi, apakah pembelian di dalamnya (top-up, item, langganan) harus seizin Anda?",
-       o:["Tidak ada pembelian, atau selalu seizin Anda dan terkunci kata sandi", "Biasanya minta izin dulu", "Kadang tanpa izin", "Bebas tanpa izin"],
-       tip:"Aktifkan persetujuan pembelian di Family Link atau “Ask to Buy”, dan jangan simpan kartu atau e-wallet di gadget anak.", refs:["oecd"]},
-      {theme:"keamanan", area:"Keterbukaan bercerita", q:"Jika anak melihat sesuatu yang membuatnya tidak nyaman di internet, apakah ia akan bercerita kepada Anda?",
-       o:["Ya, pasti", "Mungkin", "Ragu-ragu", "Sepertinya tidak"],
-       tip:"Tegaskan bahwa anak tidak akan dimarahi atau kehilangan gadgetnya jika bercerita.", refs:["faber", "livBlum"]},
+       o:["Tidak ada pembelian, atau selalu seizin saya dan terkunci kata sandi", "Biasanya minta izin dulu", "Kadang tanpa izin", "Bebas tanpa izin"],
+       tip:"Aktifkan persetujuan pembelian di Family Link atau “Ask to Buy” di iPhone, dan jangan menyimpan data kartu atau e-wallet di gadget anak.", refs:["oecd"]},
       {theme:"kualitas", area:"Fokus", q:"Saat mengerjakan PR atau kegiatan penting, seberapa sering anak terganggu oleh gadget?",
        o:["Jarang", "Kadang-kadang", "Sering", "Hampir selalu"],
-       tip:"Simpan gadget di ruangan lain saat belajar. Mulai dari 20 menit fokus, lalu istirahat sebentar.", refs:["ward"]},
+       tip:"Simpan gadget di ruangan lain saat anak belajar. Mulailah dengan 20 menit fokus, lalu beristirahat sebentar.", refs:["ward"]},
       {theme:"kualitas", area:"Belajar & berkarya", q:"Seberapa sering anak memakai gadget untuk belajar atau membuat sesuatu (membaca, menggambar, belajar keterampilan), bukan hanya menonton atau bermain game?",
        o:["Sering", "Kadang-kadang", "Jarang", "Hampir tidak pernah"],
        tip:"Tawarkan kegiatan berkarya seperti menggambar digital, membuat cerita, atau coding sederhana.", refs:["hirshpasek", "livBlum"]},
-      {theme:"keluarga", area:"Pendampingan", q:"Seberapa tahu Anda aplikasi, game, atau channel yang dipakai anak?",
-       o:["Tahu semua, sering melihat bersama", "Tahu sebagian besar", "Hanya sedikit", "Tidak tahu"],
+      {theme:"kualitas", area:"Pendampingan", q:"Seberapa jauh Anda mengetahui aplikasi, game, atau kanal video yang dipakai anak?",
+       o:["Tahu semuanya dan sering melihat bersama", "Tahu sebagian besar", "Hanya sedikit", "Tidak tahu"],
        tip:"Luangkan 10–15 menit seminggu untuk menonton atau bermain bersama anak.", refs:["livHelsper", "livBlum"]},
-      {theme:"keluarga", area:"Aktivitas offline", q:"Seberapa sering anak bermain di luar, berolahraga, atau punya hobi tanpa layar?",
+      {theme:"keluarga", area:"Keterbukaan bercerita", q:"Jika anak melihat sesuatu yang membuatnya tidak nyaman di internet, apakah ia akan bercerita kepada Anda?",
+       o:["Ya, pasti", "Mungkin", "Ragu-ragu", "Sepertinya tidak"],
+       tip:"Tegaskan bahwa anak tidak akan dimarahi atau kehilangan gadgetnya jika bercerita.", refs:["faber", "livBlum"]},
+      {theme:"keluarga", area:"Kegiatan tanpa layar", q:"Seberapa sering anak bermain di luar, berolahraga, atau punya hobi tanpa layar?",
        o:["Setiap hari", "Beberapa kali seminggu", "Jarang", "Hampir tidak pernah"],
        tip:"Jadwalkan satu kegiatan tanpa layar setiap hari, seperti bermain di luar atau memasak bersama.", refs:["who2020", "tremblay"]},
-      {theme:"keluarga", area:"Menghadapi bosan", q:"Saat merasa bosan, apakah anak bisa mencari kegiatan sendiri tanpa gadget?",
-       o:["Hampir selalu", "Sering", "Kadang-kadang", "Hampir tidak pernah"],
-       tip:"Buat bersama anak daftar 10 kegiatan tanpa layar untuk saat bosan, lalu tempel di dinding.", refs:["gray", "ginsburg"]},
       {theme:"keluarga", area:"Teladan orang tua", q:"Seberapa sering Anda sendiri memakai HP saat makan atau sedang bersama anak?",
        o:["Jarang", "Kadang-kadang", "Sering", "Hampir selalu"],
        tip:"Taruh HP di tempat lain saat makan atau bermain bersama anak. Anak meniru apa yang ia lihat.", refs:["radeskyMeal", "heitner"]}
@@ -281,18 +317,18 @@ var GROUPS = {
     eyebrow:"Untuk orang tua · anak usia 13–17 tahun", note:NOTE_CHILD,
     levels:[
       {title:"Kebiasaan digital remaja Anda sudah sehat", text:"Remaja Anda punya keseimbangan yang baik dan hubungan yang terbuka dengan Anda. Pertahankan, dan beri kepercayaan lebih besar secara bertahap seiring ia makin dewasa."},
-      {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah, lalu bicarakan bersama remaja Anda. Di usia ini, aturan yang disepakati bersama jauh lebih dipatuhi daripada aturan yang ditetapkan sepihak."},
-      {title:"Gadget mulai mendominasi keseharian remaja Anda", text:"Ini umum terjadi dan bisa diperbaiki. Mulailah dari waktu tidur dan obrolan yang tidak menghakimi. Libatkan remaja Anda dalam mencari solusi supaya ia merasa dihargai, bukan diawasi."}
+      {title:"Sudah ada dasar yang baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah, lalu bicarakan bersama remaja Anda. Pada usia ini, aturan yang disepakati bersama jauh lebih dipatuhi daripada aturan yang ditetapkan sepihak."},
+      {title:"Gadget mulai mendominasi keseharian remaja Anda", text:"Kondisi ini umum terjadi dan bisa diperbaiki. Mulailah dari waktu tidur dan obrolan yang tidak menghakimi. Libatkan remaja Anda dalam mencari solusi supaya ia merasa dihargai, bukan diawasi."}
     ],
     Q:[
       {theme:"waktu", area:"Durasi layar", q:"Rata-rata berapa lama remaja Anda memakai gadget per hari untuk hiburan (di luar keperluan sekolah)?",
        o:["Kurang dari 2 jam", "2–3 jam", "3–5 jam", "Lebih dari 5 jam"],
        tip:"Ajak remaja melihat sendiri laporan waktu layarnya, lalu sepakati target bersama.", refs:["aapSchool", "orben"]},
-      {theme:"waktu", area:"Tidur", q:"Di mana HP remaja Anda saat waktu tidur?",
+      {theme:"waktu", area:"Tidur", q:"Di mana HP remaja Anda berada saat waktu tidur?",
        o:["Diisi daya di luar kamar", "Di kamar, tapi tidak dipakai", "Kadang dipakai sampai larut", "Sering begadang dengan HP"],
-       tip:"Sepakati HP diisi daya di luar kamar pada malam hari, juga untuk orang tua. Remaja butuh 8–10 jam tidur.", refs:["paruthi", "carter"]},
+       tip:"Sepakati bahwa HP diisi daya di luar kamar pada malam hari, dan berlakukan juga untuk orang tua. Remaja butuh 8–10 jam tidur.", refs:["paruthi", "carter"]},
       {theme:"waktu", area:"Aturan & batas", q:"Bagaimana aturan gadget di keluarga Anda dibuat?",
-       o:["Disepakati bersama dan dijalankan", "Dibuat orang tua, cukup dijalankan", "Ada, tapi jarang dijalankan", "Tidak ada aturan"],
+       o:["Disepakati bersama dan dijalankan", "Dibuat oleh orang tua dan cukup dijalankan", "Ada, tapi jarang dijalankan", "Tidak ada aturan"],
        tip:"Susun aturan bersama remaja, termasuk konsekuensinya, lalu tinjau ulang setiap beberapa bulan.", refs:["aapPlan", "steinberg"]},
       {theme:"emosi", area:"Reaksi saat berhenti", q:"Bagaimana reaksi remaja Anda saat diminta berhenti memakai gadget atau tidak bisa memakainya?",
        o:["Tenang", "Sedikit kesal", "Marah", "Sangat gelisah atau marah besar"],
@@ -300,31 +336,31 @@ var GROUPS = {
       {theme:"emosi", area:"Suasana hati", q:"Bagaimana suasana hati remaja Anda setelah lama online atau memakai media sosial?",
        o:["Biasanya baik", "Netral", "Kadang murung atau membandingkan diri", "Sering murung, cemas, atau mudah marah"],
        tip:"Ingatkan bahwa media sosial menampilkan sisi terbaik orang lain. Jika murung atau cemas berlangsung lama, libatkan konselor sekolah atau psikolog.", refs:["vogel", "haidt"]},
-      {theme:"emosi", area:"Pesan & grup chat", q:"Seberapa sering remaja Anda tampak cemas atau tertekan karena pesan, grup chat, atau pesan yang tidak segera dibalas?",
+      {theme:"emosi", area:"Pesan & grup chat", q:"Seberapa sering remaja Anda tampak cemas atau tertekan karena pesan atau grup chat, termasuk pesan yang tidak segera dibalas?",
        o:["Jarang", "Kadang-kadang", "Sering", "Hampir selalu"],
-       tip:"Bantu ia membisukan grup yang tidak penting dan menetapkan waktu membalas pesan.", refs:["kushlev"]},
+       tip:"Bantu ia membisukan grup yang tidak penting dan menetapkan waktu khusus untuk membalas pesan.", refs:["kushlev"]},
       {theme:"keamanan", area:"Keamanan akun", q:"Apakah pengaturan privasi akun online remaja Anda (game, aplikasi chat, dan media sosial jika sudah 16 tahun) sudah dibahas bersama?",
        o:["Sudah, dan dicek bersama", "Sebagian", "Tidak yakin", "Belum pernah"],
-       tip:"Cek bersama: akun privat, siapa yang bisa mengirim pesan, lokasi tidak dibagikan, dan verifikasi dua langkah aktif.", refs:["livBlum", "oecd"]},
-      {theme:"keamanan", area:"Batas usia platform", q:"Apakah akun media sosial remaja Anda sesuai aturan usia? (Di bawah 16 tahun belum boleh punya akun di platform seperti TikTok, Instagram, YouTube, dan Roblox.)",
+       tip:"Periksa bersama: akun dalam mode privat, siapa saja yang bisa mengirim pesan, lokasi tidak dibagikan, dan verifikasi dua langkah sudah aktif.", refs:["livBlum", "oecd"]},
+      {theme:"keamanan", area:"Batas usia media sosial", q:"Apakah akun media sosial remaja Anda sesuai aturan usia? (Anak di bawah 16 tahun belum boleh memiliki akun di platform seperti TikTok, Instagram, YouTube, dan Roblox.)",
        o:["Sesuai aturan, dan saya tahu akun apa saja yang ia punya", "Sesuai aturan, tapi saya kurang tahu akunnya", "Ada akun yang belum sesuai usia, dengan sepengetahuan saya", "Ada akun yang belum sesuai usia, tanpa sepengetahuan saya"],
-       tip:"Sesuai PP Tunas, remaja di bawah 16 tahun belum boleh punya akun di platform berisiko tinggi. Jelaskan sebagai perlindungan, dan dampingi saat ia membuat akun pertama di usia 16.", refs:["pptunas", "haidt"]},
+       tip:"Sesuai PP Tunas, remaja di bawah 16 tahun belum boleh memiliki akun di platform berisiko tinggi. Jelaskan aturan ini sebagai perlindungan, dan dampingi saat ia membuat akun pertamanya pada usia 16 tahun.", refs:["pptunas", "haidt"]},
       {theme:"keamanan", area:"Konten dewasa", q:"Seberapa terbuka Anda dan remaja Anda membicarakan konten tidak pantas (misalnya pornografi atau kekerasan) yang mungkin ia temui online?",
        o:["Sudah beberapa kali dibicarakan dengan tenang", "Pernah dibicarakan sekali", "Belum, tapi ingin membicarakannya", "Belum pernah dan terasa sulit dibicarakan"],
        tip:"Bicarakan dengan tenang bahwa konten seperti ini mudah ditemui, dan ia boleh bercerita tanpa takut dimarahi. Aktifkan juga SafeSearch dan filter konten dewasa sebagai lapisan perlindungan tambahan.", refs:["livBlum", "oecd"]},
-      {theme:"keamanan", area:"Keterbukaan bercerita", q:"Jika remaja Anda dirundung, diganggu, atau dihubungi orang asing secara online, apakah ia akan bercerita kepada Anda?",
-       o:["Ya, pasti", "Mungkin", "Ragu-ragu", "Sepertinya tidak"],
-       tip:"Tegaskan bahwa ia tidak akan disalahkan atau kehilangan HP jika bercerita.", refs:["hinduja"]},
       {theme:"kualitas", area:"Fokus", q:"Seberapa sering remaja Anda bisa fokus lama pada satu kegiatan (belajar, membaca, hobi) tanpa mengecek HP?",
        o:["Sering", "Kadang-kadang", "Jarang", "Hampir tidak pernah"],
-       tip:"Tugas dulu, hiburan kemudian. Ajak ia mencoba blok fokus 25 menit dengan HP di ruangan lain.", refs:["ward", "cirillo"]},
+       tip:"Biasakan tugas dahulu, hiburan kemudian. Ajak ia mencoba fokus selama 25 menit dengan HP di ruangan lain.", refs:["ward", "cirillo"]},
       {theme:"kualitas", area:"Belajar & berkarya", q:"Seberapa sering remaja Anda memakai gadget untuk belajar hal baru atau berkarya (membuat video, musik, desain, coding, kursus online)?",
        o:["Sering", "Kadang-kadang", "Jarang", "Hampir tidak pernah"],
        tip:"Dukung minatnya dengan kursus online gratis atau komunitas berkarya.", refs:["ito"]},
-      {theme:"keluarga", area:"Pendampingan", q:"Seberapa sering Anda mengobrol santai dengan remaja Anda tentang hal yang ia lihat atau lakukan secara online (game, chat, video, atau media sosial)?",
-       o:["Sering", "Kadang-kadang", "Jarang", "Tidak pernah"],
-       tip:"Tanyakan dengan rasa ingin tahu, misalnya “Lagi ramai apa di internet?”, bukan menginterogasi.", refs:["livBlum", "heitner"]},
-      {theme:"keluarga", area:"Aktivitas offline", q:"Seberapa sering remaja Anda berolahraga, punya hobi, atau bertemu teman secara langsung?",
+      {theme:"kualitas", area:"Tujuan pemakaian", q:"Apakah gadget lebih sering membantu atau menghambat remaja Anda mencapai tujuannya (sekolah, cita-cita, hobi)?",
+       o:["Lebih sering membantu", "Seimbang", "Lebih sering menghambat", "Hampir selalu menghambat"],
+       tip:"Ajak ia bertanya setiap kali membuka HP: “Apakah ini membantu tujuanku sekarang?” Pertanyaan ini lebih efektif daripada larangan, karena jawabannya datang dari dirinya sendiri.", refs:["eyal"]},
+      {theme:"keluarga", area:"Keterbukaan bercerita", q:"Jika remaja Anda dirundung, diganggu, atau dihubungi orang asing secara online, apakah ia akan bercerita kepada Anda?",
+       o:["Ya, pasti", "Mungkin", "Ragu-ragu", "Sepertinya tidak"],
+       tip:"Tegaskan bahwa ia tidak akan disalahkan atau kehilangan HP jika bercerita. Biasakan juga obrolan santai tentang dunia online, misalnya “Lagi ramai apa di internet?”", refs:["hinduja", "livBlum"]},
+      {theme:"keluarga", area:"Kegiatan tanpa layar", q:"Seberapa sering remaja Anda berolahraga, punya hobi, atau bertemu teman secara langsung?",
        o:["Hampir setiap hari", "Beberapa kali seminggu", "Jarang", "Hampir tidak pernah"],
        tip:"Dukung kegiatan yang ia minati, seperti olahraga, musik, atau kegiatan komunitas.", refs:["who2020", "haidt"]},
       {theme:"keluarga", area:"Teladan orang tua", q:"Seberapa sering Anda sendiri memakai HP saat makan atau sedang mengobrol dengan remaja Anda?",
@@ -339,54 +375,54 @@ var GROUPS = {
     levels:[
       {title:"Kebiasaan digital Anda sudah sehat", text:"Anda memakai gadget dengan sadar dan tetap punya ruang untuk kegiatan lain. Pertahankan, dan jadilah contoh yang baik bagi adik atau anggota keluarga lain."},
       {title:"Sudah cukup baik, tapi beberapa area perlu diperkuat", text:"Pilih satu atau dua area di bawah untuk dicoba selama 2–3 minggu. Perubahan kecil yang konsisten lebih bertahan daripada \"detoks digital\" besar yang hanya bertahan beberapa hari."},
-      {title:"Gadget mulai mengendalikan keseharian Anda", text:"Ini sangat umum dan bisa diperbaiki. Mulailah dari pagi dan malam hari: dua waktu ini paling menentukan kualitas tidur dan fokus Anda sepanjang hari."}
+      {title:"Gadget mulai mengendalikan keseharian Anda", text:"Kondisi ini sangat umum dan bisa diperbaiki. Mulailah dari pagi dan malam hari: dua waktu ini paling menentukan kualitas tidur dan fokus Anda sepanjang hari."}
     ],
     Q:[
       {theme:"waktu", area:"Durasi layar", q:"Rata-rata berapa lama Anda memakai gadget per hari untuk hiburan (di luar kerja atau kuliah)?",
        o:["Kurang dari 2 jam", "2–4 jam", "4–6 jam", "Lebih dari 6 jam"],
-       tip:"Cek laporan waktu layar di HP, lalu pasang batas harian untuk 1–2 aplikasi yang paling menyita waktu.", refs:["newportDM"]},
+       tip:"Periksa laporan waktu layar di HP, lalu pasang batas harian untuk 1–2 aplikasi yang paling menyita waktu.", refs:["newportDM"]},
       {theme:"waktu", area:"Pagi hari", q:"Kapan biasanya Anda pertama kali membuka HP setelah bangun?",
-       o:["Lebih dari 30 menit setelah bangun", "Dalam 30 menit", "Langsung saat bangun", "Bahkan terbangun malam untuk mengecek HP"],
-       tip:"Tunda membuka HP 30 menit setelah bangun, dan pakai jam weker biasa.", refs:["newportDM", "clear"]},
+       o:["Lebih dari 30 menit setelah bangun", "Dalam 30 menit", "Langsung saat bangun", "Bahkan terbangun pada malam hari untuk mengecek HP"],
+       tip:"Tunda membuka HP hingga 30 menit setelah bangun, dan gunakan jam weker biasa sebagai alarm.", refs:["newportDM", "clear"]},
       {theme:"waktu", area:"Tidur", q:"Seberapa sering Anda memakai HP di tempat tidur sampai larut malam?",
        o:["Tidak pernah", "Kadang-kadang", "Sering", "Hampir setiap malam"],
        tip:"Aktifkan mode tidur otomatis dan isi daya HP di luar kamar.", refs:["exelmans"]},
-      {theme:"waktu", area:"Aturan & batas", q:"Apakah Anda punya waktu atau tempat bebas HP yang benar-benar Anda jalankan (misalnya saat makan atau sebelum tidur)?",
-       o:["Ya, konsisten", "Ada, tapi kadang dilanggar", "Jarang dijalankan", "Tidak ada"],
-       tip:"Pilih satu waktu dan satu tempat bebas HP selama dua minggu, lalu tambah perlahan.", refs:["newportDM", "clear"]},
       {theme:"emosi", area:"Kesejahteraan", q:"Secara keseluruhan, bagaimana penggunaan HP dan media sosial memengaruhi perasaan dan kesehatan Anda?",
        o:["Umumnya membuat saya merasa baik", "Netral", "Kadang membuat cemas atau membandingkan diri", "Sering membuat cemas, lelah, atau membandingkan diri"],
-       tip:"Perhatikan perasaan Anda setiap mengambil HP, lalu berhenti mengikuti akun yang membuat Anda membandingkan diri.", refs:["hunt", "vogel"]},
+       tip:"Perhatikan perasaan Anda setiap kali mengambil HP, lalu berhenti mengikuti akun yang membuat Anda membandingkan diri.", refs:["hunt", "vogel"]},
       {theme:"emosi", area:"Pesan & grup chat", q:"Bagaimana perasaan Anda biasanya saat membuka pesan dan grup chat?",
        o:["Biasanya positif", "Netral", "Kadang tertekan atau kewalahan", "Sering tertekan atau kewalahan"],
-       tip:"Balas pesan di jam-jam tertentu dan bisukan grup yang tidak penting.", refs:["kushlev"]},
+       tip:"Balas pesan pada jam-jam tertentu dan bisukan grup yang tidak penting.", refs:["kushlev"]},
       {theme:"emosi", area:"Kendali diri", q:"Bagaimana perasaan Anda jika harus seharian tanpa HP?",
        o:["Biasa saja", "Sedikit tidak nyaman", "Cukup gelisah", "Sangat gelisah"],
-       tip:"Latih jeda kecil, misalnya keluar sebentar tanpa HP, lalu perpanjang perlahan.", refs:["yildirim"]},
+       tip:"Latih jeda singkat, misalnya keluar rumah sebentar tanpa membawa HP, lalu perpanjang secara bertahap.", refs:["yildirim"]},
       {theme:"keamanan", area:"Jejak digital", q:"Sebelum mengunggah foto, lokasi, atau informasi pribadi (termasuk tentang anggota keluarga), seberapa sering Anda mempertimbangkan siapa saja yang bisa melihatnya?",
        o:["Selalu", "Sering", "Kadang-kadang", "Jarang atau tidak pernah"],
-       tip:"Sebelum mengunggah, tanyakan: apakah saya nyaman jika ini dilihat orang asing bertahun-tahun lagi? Hindari membagikan lokasi saat itu juga, dan foto anak yang menunjukkan sekolah atau rumah.", refs:["steinbergSB", "livBlum"]},
+       tip:"Sebelum mengunggah, tanyakan: apakah saya nyaman jika ini dilihat orang asing bertahun-tahun lagi? Hindari membagikan lokasi secara langsung (real-time) dan foto anak yang memperlihatkan sekolah atau rumahnya.", refs:["steinbergSB", "livBlum"]},
       {theme:"keamanan", area:"Cek fakta & hoaks", q:"Sebelum meneruskan berita atau pesan berantai, seberapa sering Anda mengecek kebenarannya?",
        o:["Selalu", "Sering", "Kadang-kadang", "Jarang atau tidak pernah"],
        tip:"Berhenti sejenak sebelum meneruskan, cek sumbernya, dan bandingkan dengan media tepercaya atau situs cek fakta.", refs:["pennycook"]},
+      {theme:"keamanan", area:"Waspada penipuan online", q:"Saat menerima tautan, file APK, atau pesan mencurigakan (misalnya undangan digital atau tagihan palsu), apa yang biasanya Anda lakukan?",
+       o:["Selalu mengabaikan dan menghapusnya", "Mengecek dulu sebelum membukanya", "Kadang langsung membukanya", "Sering langsung membukanya"],
+       tip:"Jangan membuka tautan atau memasang file APK dari pengirim yang tidak dikenal, walaupun tampak mendesak. Tanyakan langsung kepada pengirimnya lewat telepon jika ragu.", refs:["jakobsson"]},
       {theme:"kualitas", area:"Fokus", q:"Seberapa sering notifikasi mengganggu fokus Anda saat bekerja atau belajar?",
        o:["Jarang", "Kadang-kadang", "Sering", "Hampir selalu"],
-       tip:"Matikan notifikasi yang tidak penting dan cek pesan pada waktu tertentu.", refs:["mark", "ward"]},
+       tip:"Matikan notifikasi yang tidak penting dan periksa pesan pada waktu tertentu saja.", refs:["mark", "ward"]},
       {theme:"kualitas", area:"Scrolling tanpa tujuan", q:"Seberapa sering Anda scrolling media sosial lebih lama dari yang Anda niatkan?",
        o:["Jarang", "Kadang-kadang", "Sering", "Hampir setiap kali"],
-       tip:"Pindahkan aplikasi media sosial dari layar utama. Sedikit hambatan sudah cukup mengurangi kebiasaan membuka tanpa sadar.", refs:["clear", "eyal"]},
+       tip:"Pindahkan aplikasi media sosial dari layar utama, dan biasakan bertanya: “Apakah HP ini sedang membantu saya sekarang?” Sedikit hambatan sudah cukup untuk mengurangi kebiasaan membukanya tanpa sadar.", refs:["clear", "eyal"]},
       {theme:"kualitas", area:"Belajar & berkarya", q:"Seberapa sering Anda memakai HP untuk belajar hal baru atau mendapat inspirasi?",
        o:["Sering", "Kadang-kadang", "Jarang", "Hampir tidak pernah"],
-       tip:"Taruh aplikasi belajar, buku digital, atau podcast bermanfaat di layar utama.", refs:["clear"]},
-      {theme:"kualitas", area:"Tujuan pemakaian", q:"Seberapa sering HP mengalihkan Anda dari hal yang benar-benar penting bagi Anda?",
-       o:["Jarang", "Kadang-kadang", "Sering", "Hampir selalu"],
-       tip:"Biasakan bertanya: “Apakah HP ini sedang membantu saya sekarang?” Jika tidak, letakkan.", refs:["eyal", "newportDW"]},
+       tip:"Letakkan aplikasi belajar, buku digital, atau podcast yang bermanfaat di layar utama.", refs:["clear"]},
       {theme:"keluarga", area:"Waktu bersama", q:"Seberapa sering Anda menghabiskan waktu bersama keluarga atau teman tanpa sibuk dengan HP?",
        o:["Hampir setiap hari", "Beberapa kali seminggu", "Jarang", "Hampir tidak pernah"],
        tip:"Sepakati waktu tanpa HP bersama keluarga atau teman, misalnya saat makan bersama.", refs:["przybylski"]},
-      {theme:"keluarga", area:"Aktivitas offline", q:"Seberapa sering Anda berolahraga atau menjalani hobi tanpa layar?",
+      {theme:"keluarga", area:"Kegiatan tanpa layar", q:"Seberapa sering Anda berolahraga atau menjalani hobi tanpa layar?",
        o:["Hampir setiap hari", "Beberapa kali seminggu", "Jarang", "Hampir tidak pernah"],
-       tip:"Jadwalkan satu kegiatan tanpa layar yang rutin, seperti jalan pagi atau olahraga.", refs:["who2020"]}
+       tip:"Jadwalkan satu kegiatan tanpa layar yang rutin, seperti jalan pagi atau olahraga.", refs:["who2020"]},
+      {theme:"keluarga", area:"Waktu bebas HP", q:"Apakah Anda punya waktu atau tempat bebas HP yang benar-benar Anda jalankan (misalnya saat makan atau sebelum tidur)?",
+       o:["Ya, dan dijalankan secara konsisten", "Ada, tapi kadang dilanggar", "Jarang dijalankan", "Tidak ada"],
+       tip:"Tetapkan satu waktu dan satu tempat bebas HP selama dua minggu, lalu tambahkan secara bertahap.", refs:["newportDM", "clear"]}
     ]
   }
 };
@@ -394,6 +430,7 @@ var GROUPS = {
 // ---------- RUJUKAN ----------
 // short = label singkat di bawah saran; full = sitasi lengkap di "Daftar rujukan"
 var REFS = {
+  jakobsson:{short:"Jakobsson & Myers (2006)", full:"Jakobsson, M., & Myers, S. (Eds.). (2006). <em>Phishing and countermeasures: Understanding the increasing problem of electronic identity theft</em>. Hoboken, NJ: Wiley. (Buku)"},
   kirkorian:{short:"Kirkorian dkk. (2009)", full:"Kirkorian, H. L., Pempek, T. A., Murphy, L. A., Schmidt, M. E., & Anderson, D. R. (2009). The impact of background television on parent–child interaction. <em>Child Development, 80</em>(5), 1350–1359."},
   pennycook:{short:"Pennycook & Rand (2021)", full:"Pennycook, G., & Rand, D. G. (2021). The psychology of fake news. <em>Trends in Cognitive Sciences, 25</em>(5), 388–402."},
   steinbergSB:{short:"S. B. Steinberg (2017)", full:"Steinberg, S. B. (2017). Sharenting: Children’s privacy in the age of social media. <em>Emory Law Journal, 66</em>(4), 839–884."},
@@ -465,16 +502,28 @@ function shortRefs(keys){ return keys.map(function(k){ return REFS[k].short; }).
 
 var THEMES = {waktu:"Waktu & batas", emosi:"Emosi & kesejahteraan", keamanan:"Keamanan & perlindungan", kualitas:"Kualitas penggunaan", keluarga:"Keluarga & kehidupan nyata"};
 var THEME_SENT = {
-  waktu:{kuat:"Batas waktu dan rutinitas gadget sudah jelas dan dijalankan, sehingga tidur dan kegiatan lain tetap terjaga.", lemah:"Gadget belum punya batas waktu dan tempat yang jelas, sehingga mudah mengambil waktu tidur, makan, dan kegiatan lain."},
-  emosi:{kuat:"Penggunaan gadget tidak banyak mengganggu suasana hati dan kemampuan mengendalikan diri.", lemah:"Gadget mulai memengaruhi suasana hati, misalnya muncul rewel, cemas, atau sulit berhenti."},
+  waktu:{kuat:"Batas waktu dan rutinitas gadget sudah jelas dan dijalankan, sehingga tidur dan kegiatan lain tetap terjaga.", lemah:"Penggunaan gadget belum memiliki batas waktu dan tempat yang jelas, sehingga mudah menyita waktu tidur, makan, dan kegiatan lain."},
+  emosi:{kuat:"Penggunaan gadget tidak banyak mengganggu suasana hati dan kemampuan mengendalikan diri.", lemah:"Gadget mulai memengaruhi suasana hati, misalnya menjadi rewel, cemas, atau sulit berhenti."},
   keamanan:{kuat:"Perlindungan sudah berlapis: pengaturan perangkat aktif dan ada rasa aman untuk bercerita.", lemah:"Perlindungan masih longgar, sehingga risiko konten atau kontak yang tidak aman lebih besar."},
   kualitas:{kuat:"Gadget lebih banyak dipakai untuk hal yang bermanfaat dan dengan tujuan yang jelas.", lemah:"Gadget lebih sering dipakai tanpa tujuan, misalnya menonton atau scrolling untuk mengisi waktu."},
-  keluarga:{kuat:"Ada waktu bersama, aktivitas fisik, dan teladan yang baik dalam keseharian.", lemah:"Waktu bersama dan kegiatan nyata mulai tergeser oleh layar."}
+  keluarga:{kuat:"Keseharian diisi waktu bersama, aktivitas fisik, dan teladan yang baik.", lemah:"Waktu bersama dan kegiatan nyata mulai tergeser oleh layar."}
 };
+// ---------- PENGATURAN ----------
+var SITE_URL = "https://monkdigital-id.github.io/cek-kebiasaan-digital/";
+var WA_NUMBER = "";      // nomor WhatsApp monkdigital, format 628xxxxxxxxxx (tanpa + dan spasi)
+var GOATCOUNTER = "";    // kode GoatCounter, misalnya "monkdigital" jika alamatnya monkdigital.goatcounter.com
+
+var PRODUCTS = [
+  {id:"efek", title:"Efek Digital yang Tanpa Disadari pada Anak", desc:"Kenali dampak gadget pada tidur, emosi, fokus, dan keamanan anak.", free:true},
+  {id:"kembang", title:"Cara Mudah Mengembangkan Anak di Era Digital", desc:"Panduan praktis per tema kuis ini: aturan, emosi, keamanan, dan kebiasaan keluarga.", free:false},
+  {id:"sukses", title:"Anak Sukses di Era Digital", desc:"Kisah nyata anak yang sukses lewat keterampilan digital, dan peran orang tuanya.", free:false}
+];
+
 var OTHER_CHECKS = {
   polaAsuh:{name:"Cek Pola Asuh Anak", url:"https://monkdigital-id.github.io/cek-pola-asuh/"},
   minatBakat:{name:"Cek Minat dan Bakat", url:"https://monkdigital-id.github.io/cek-minat-bakat/"}
 };
+var SHARE_LABEL = {balita:"balita", sd:"anak SD", remaja:"remaja", dewasa:"dewasa muda"};
 var SUBJECT = {balita:"si kecil", sd:"anak", remaja:"remaja Anda", dewasa:"Anda"};
 var THEME_ORDER = ["waktu","emosi","keamanan","kualitas","keluarga"];
 var THEME_LABELS = ["Kuat","Cukup","Perlu diperkuat"];
@@ -484,7 +533,7 @@ var COLORS = ["var(--good)","var(--warn)","var(--alert)"];
 var LABELS = ["Seimbang","Perlu penyesuaian","Perlu perhatian lebih"];
 var PCTS = [0.8,0.5,0]; // batas kategori: 80% dan 50% dari skor maksimal
 var DEFAULT_EYEBROW = "Untuk orang tua dan keluarga";
-var LEAD_PARENT = "Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban tidak disimpan ke mana pun.";
+var LEAD_PARENT = "Kenali kebiasaan digital anak, remaja, atau diri Anda sendiri dalam 5 menit. Pilih kelompok usia, jawab 15 pertanyaan sesuai kebiasaan sebulan terakhir, lalu dapatkan saran praktis yang bisa langsung dicoba. Jawaban tidak disimpan ke mana pun.";
 
 var g = null, Q = [], ans = [], i = 0;
 function $(id){ return document.getElementById(id); }
@@ -594,29 +643,7 @@ function showResult(){
     return el;
   }
 
-  var list = $("tips"); list.innerHTML = "";
-  var plist = $("prio"); plist.innerHTML = "";
-  var weak = Q.map(function(q,k){ return {theme:q.theme, area:q.area, tip:q.tip, refs:q.refs, p:pts[k], k:k}; })
-              .filter(function(x){ return x.p <= 1; })
-              .sort(function(a,b){ return a.p - b.p || a.k - b.k; });
-  var prio = weak.filter(function(x){ return x.p === 0; }).slice(0,2);
-  var rest = weak.filter(function(x){ return prio.indexOf(x) < 0; });
-  prio.forEach(function(w){ plist.appendChild(tipItem(w)); });
-  $("prio-title").hidden = plist.hidden = prio.length === 0;
-
-  if (weak.length){
-    $("tips-title").textContent = prio.length ? "Area lain yang bisa diperkuat" : "Area yang bisa diperkuat";
-    rest.forEach(function(w){ list.appendChild(tipItem(w)); });
-    $("tips-title").hidden = list.hidden = rest.length === 0;
-  } else {
-    $("tips-title").textContent = "Kekuatan Anda";
-    $("tips-title").hidden = list.hidden = false;
-    Q.filter(function(q,k){ return pts[k] === 3; }).slice(0,4).forEach(function(q){
-      list.appendChild(tipItem(q, "strong", "Sudah berjalan sangat baik. Pertahankan."));
-    });
-  }
-
-  // Kesimpulan
+  // Statistik per tema
   var stats = [];
   THEME_ORDER.forEach(function(th){
     var idx = []; Q.forEach(function(q,k){ if (q.theme === th) idx.push(k); });
@@ -626,6 +653,35 @@ function showResult(){
   });
   var best = stats.reduce(function(a,b){ return b.pct > a.pct ? b : a; });
   var worst = stats.reduce(function(a,b){ return b.pct < a.pct ? b : a; });
+
+  var list = $("tips"); list.innerHTML = "";
+  var plist = $("prio"); plist.innerHTML = "";
+  var weak = Q.map(function(q,k){ return {theme:q.theme, area:q.area, tip:q.tip, refs:q.refs, p:pts[k], k:k}; })
+              .filter(function(x){ return x.p <= 1; })
+              .sort(function(a,b){ return a.p - b.p || ((b.theme === worst.th) - (a.theme === worst.th)) || a.k - b.k; });
+  var prio = weak.filter(function(x){ return x.p === 0; }).slice(0,2);
+  var rest = weak.filter(function(x){ return prio.indexOf(x) < 0; });
+  prio.forEach(function(w){ plist.appendChild(tipItem(w)); });
+  $("prio-title").hidden = plist.hidden = prio.length === 0;
+
+  if (weak.length){
+    $("tips-title").textContent = prio.length ? "Area lain yang bisa diperkuat" : "Area yang bisa diperkuat";
+    rest.forEach(function(w, n){ var el = tipItem(w); if (n >= 3) { el.hidden = true; el.className = "extra"; } list.appendChild(el); });
+    $("tips-title").hidden = list.hidden = rest.length === 0;
+    var more = $("more-tips");
+    more.hidden = rest.length <= 3;
+    more.textContent = "Lihat " + (rest.length - 3) + " saran lainnya";
+    more.onclick = function(){ Array.prototype.forEach.call(list.children, function(el){ el.hidden = false; }); more.hidden = true; };
+  } else {
+    $("more-tips").hidden = true;
+    $("tips-title").textContent = "Kekuatan Anda";
+    $("tips-title").hidden = list.hidden = false;
+    Q.filter(function(q,k){ return pts[k] === 3; }).slice(0,4).forEach(function(q){
+      list.appendChild(tipItem(q, "strong", "Sudah berjalan sangat baik. Pertahankan."));
+    });
+  }
+
+  // Kesimpulan
   var cp = $("concl-text"); cp.innerHTML = "";
   function add(t, bold){ var n = bold ? document.createElement("b") : document.createTextNode(t); if (bold) n.textContent = t; cp.appendChild(n); }
   function lc(t){ return t.charAt(0).toLowerCase() + t.slice(1); }
@@ -637,8 +693,12 @@ function showResult(){
     add(g.key === "dewasa" ? "Semua tema sudah berjalan baik. Pertahankan kebiasaan baik ini." : "Semua tema sudah berjalan baik. Pertahankan kebiasaan ini, dan sesuaikan aturannya seiring bertambahnya usia anak.");
   } else {
     add("Yang paling perlu perhatian adalah "); add(THEMES[worst.th], true); add(": " + lc(THEME_SENT[worst.th].lemah) + " ");
-    var first = prio[0] || weak[0];
-    if (first){ add("Langkah pertama yang disarankan: "); add(first.area, true); add("."); }
+    var first = weak.filter(function(x){ return x.theme === worst.th; })[0] || weak[0];
+    if (first){
+      var mFirst = first.tip.match(/^.*?[.?!]”?(?=\s|$)/);
+      var firstSentence = mFirst ? mFirst[0] : first.tip;
+      add("Langkah pertama yang disarankan: "); add(first.area, true); add(". " + firstSentence);
+    }
   }
 
   // Arahkan ke cek lain yang relevan
@@ -648,7 +708,7 @@ function showResult(){
     var d = document.createElement("div"); d.className = "next-card";
     var t = document.createElement("b"); t.textContent = c.name;
     var p = document.createElement("p"); p.textContent = why;
-    var a = document.createElement("a"); a.href = c.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Mulai " + c.name + " →";
+    var a = document.createElement("a"); a.href = c.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = c.name + " →";
     d.appendChild(t); d.appendChild(p); d.appendChild(a); nc.appendChild(d);
   }
   var subj = SUBJECT[g.key];
@@ -670,6 +730,35 @@ function showResult(){
   }
   $("next-box").hidden = nc.children.length === 0;
 
+  // Dari monkdigital (produk sendiri, terpisah dari saran dan rujukan)
+  var pr = $("products"); pr.innerHTML = "";
+  var note = document.createElement("p"); note.className = "lead-note";
+  note.textContent = "Produk buatan monkdigital sendiri, terpisah dari saran dan rujukan di atas.";
+  pr.appendChild(note);
+  var anyWeak = stats.some(function(x){ return x.si > 0; });
+  PRODUCTS.forEach(function(pd){
+    var featured = (pd.id === "efek" && li > 0) || (pd.id === "kembang" && anyWeak) || (pd.id === "sukses" && li === 0);
+    var d = document.createElement("div"); d.className = "product" + (featured ? " featured" : "");
+    var bd = document.createElement("div"); bd.className = "badges";
+    if (pd.free){ var f = document.createElement("span"); f.className = "badge free"; f.textContent = "Gratis"; bd.appendChild(f); }
+    var sh = document.createElement("span"); sh.className = "badge"; sh.textContent = "Segera hadir"; bd.appendChild(sh);
+    if (featured){ var rc = document.createElement("span"); rc.className = "badge"; rc.textContent = "Cocok untuk hasil Anda"; bd.appendChild(rc); }
+    var t = document.createElement("b"); t.textContent = pd.title;
+    var ds = document.createElement("p"); ds.textContent = pd.desc;
+    d.appendChild(bd); d.appendChild(t); d.appendChild(ds);
+    if (WA_NUMBER){
+      var a = document.createElement("a"); a.target = "_blank"; a.rel = "noopener";
+      a.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo monkdigital, saya ingin dikabari saat buku \u201c" + pd.title + "\u201d tersedia.");
+      a.textContent = "Kabari saya";
+      d.appendChild(a);
+    }
+    pr.appendChild(d);
+  });
+
+  // Bagikan ke WhatsApp (tanpa detail jawaban)
+  var shareText = "Saya baru mencoba Cek Kebiasaan Digital untuk " + SHARE_LABEL[g.key] + " (" + g.range + "). Hasilnya: " + LABELS[li] + ". Gratis, hanya 5 menit, dan jawaban tidak disimpan. Coba juga: " + SITE_URL;
+  $("wa-share").href = "https://wa.me/?text=" + encodeURIComponent(shareText);
+
   var rl = $("ref-list"); rl.innerHTML = "";
   used.map(function(k){ return REFS[k]; })
       .sort(function(a,b){ return a.full.localeCompare(b.full); })
@@ -689,6 +778,17 @@ $("again").onclick = function(){ ans = Q.map(function(){ return null; }); i = 0;
 $("change").onclick = backToStart;
 $("lead").textContent = LEAD_PARENT;
 buildAges();
+
+// Statistik kunjungan (aktif hanya jika GOATCOUNTER diisi)
+if (GOATCOUNTER){
+  try {
+    var gc = document.createElement("script");
+    gc.async = true; gc.src = "https://gc.zgo.at/count.js";
+    gc.setAttribute("data-goatcounter", "https://" + GOATCOUNTER + ".goatcounter.com/count");
+    document.body.appendChild(gc);
+    $("stat-note").hidden = false;
+  } catch(e){}
+}
 </script>
 </body>
 </html>
