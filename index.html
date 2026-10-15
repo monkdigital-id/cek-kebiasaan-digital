@@ -64,6 +64,12 @@ h3{font-family:var(--display); font-size:18px; margin:0}
 .conclusion{background:var(--accent-soft); border-radius:12px; padding:14px 16px; display:grid; gap:6px}
 .conclusion h3{font-size:16px}
 .conclusion p{margin:0}
+.next-checks{display:grid; gap:10px}
+.next-card{border:1.5px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; gap:6px}
+.next-card b{font-family:var(--display); font-size:17px}
+.next-card p{margin:0; font-size:14.5px; color:var(--muted)}
+.next-card a{justify-self:start; font-weight:700; color:#fff; background:var(--accent); text-decoration:none; padding:8px 14px; border-radius:10px; margin-top:4px}
+.next-card a:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
 .themes{list-style:none; margin:0; padding:0; display:grid; gap:12px}
 .theme-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 12px; align-items:center}
 .theme-name{font-weight:700; font-size:14.5px}
@@ -133,6 +139,10 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
     <ul class="tips prio" id="prio"></ul>
     <h3 id="tips-title">Area lain yang bisa diperkuat</h3>
     <ul class="tips" id="tips"></ul>
+    <section id="next-box" hidden>
+      <h3>Cek lain yang relevan untuk Anda</h3>
+      <div class="next-checks" id="next-checks"></div>
+    </section>
     <details class="ref-box" id="ref-box">
       <summary>Daftar rujukan</summary>
       <ol class="refs" id="ref-list"></ol>
@@ -461,6 +471,11 @@ var THEME_SENT = {
   kualitas:{kuat:"Gadget lebih banyak dipakai untuk hal yang bermanfaat dan dengan tujuan yang jelas.", lemah:"Gadget lebih sering dipakai tanpa tujuan, misalnya menonton atau scrolling untuk mengisi waktu."},
   keluarga:{kuat:"Ada waktu bersama, aktivitas fisik, dan teladan yang baik dalam keseharian.", lemah:"Waktu bersama dan kegiatan nyata mulai tergeser oleh layar."}
 };
+var OTHER_CHECKS = {
+  polaAsuh:{name:"Cek Pola Asuh Anak", url:"https://monkdigital-id.github.io/cek-pola-asuh/"},
+  minatBakat:{name:"Cek Minat dan Bakat", url:"https://monkdigital-id.github.io/cek-minat-bakat/"}
+};
+var SUBJECT = {balita:"si kecil", sd:"anak", remaja:"remaja Anda", dewasa:"Anda"};
 var THEME_ORDER = ["waktu","emosi","keamanan","kualitas","keluarga"];
 var THEME_LABELS = ["Kuat","Cukup","Perlu diperkuat"];
 
@@ -625,6 +640,30 @@ function showResult(){
     var first = prio[0] || weak[0];
     if (first){ add("Langkah pertama yang disarankan: "); add(first.area, true); add("."); }
   }
+
+  // Arahkan ke cek lain yang relevan
+  var nc = $("next-checks"); nc.innerHTML = "";
+  function isWeak(th){ return stats.some(function(x){ return x.th === th && x.si > 0; }); }
+  function card(c, why){
+    var d = document.createElement("div"); d.className = "next-card";
+    var t = document.createElement("b"); t.textContent = c.name;
+    var p = document.createElement("p"); p.textContent = why;
+    var a = document.createElement("a"); a.href = c.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Mulai " + c.name + " →";
+    d.appendChild(t); d.appendChild(p); d.appendChild(a); nc.appendChild(d);
+  }
+  var subj = SUBJECT[g.key];
+  if (g.key !== "dewasa"){
+    var paTheme = ["emosi","keluarga","waktu"].filter(isWeak)[0];
+    if (paTheme){
+      card(OTHER_CHECKS.polaAsuh, "Tema " + THEMES[paTheme] + " perlu diperkuat. Cara orang tua mendampingi dan membuat aturan sangat dipengaruhi pola asuh. Kenali pola asuh Anda untuk menemukan pendekatan yang paling cocok.");
+    }
+  }
+  if (isWeak("kualitas")){
+    card(OTHER_CHECKS.minatBakat, "Gadget lebih sering dipakai untuk mengisi waktu. Mengenali minat dan bakat " + subj + " membantu mengarahkan waktu layar ke kegiatan yang benar-benar bermanfaat.");
+  } else if (allStrong){
+    card(OTHER_CHECKS.minatBakat, "Kebiasaan digital sudah sehat. Langkah berikutnya: kenali minat dan bakat " + subj + " supaya bisa dikembangkan lebih terarah.");
+  }
+  $("next-box").hidden = nc.children.length === 0;
 
   var rl = $("ref-list"); rl.innerHTML = "";
   used.map(function(k){ return REFS[k]; })
