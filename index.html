@@ -652,14 +652,19 @@ function showResult(){
     d.appendChild(t); d.appendChild(p); d.appendChild(a); nc.appendChild(d);
   }
   var subj = SUBJECT[g.key];
+  var belowTop = li > 0; // skor total di bawah 80%: kedua cek selalu ditampilkan
   if (g.key !== "dewasa"){
     var paTheme = ["emosi","keluarga","waktu"].filter(isWeak)[0];
     if (paTheme){
       card(OTHER_CHECKS.polaAsuh, "Tema " + THEMES[paTheme] + " perlu diperkuat. Cara orang tua mendampingi dan membuat aturan sangat dipengaruhi pola asuh. Kenali pola asuh Anda untuk menemukan pendekatan yang paling cocok.");
+    } else if (belowTop){
+      card(OTHER_CHECKS.polaAsuh, "Skor total belum mencapai kategori Seimbang. Kebiasaan digital anak sangat dipengaruhi pola asuh di rumah. Kenali pola asuh Anda untuk menemukan pendekatan yang paling cocok.");
     }
   }
   if (isWeak("kualitas")){
     card(OTHER_CHECKS.minatBakat, "Gadget lebih sering dipakai untuk mengisi waktu. Mengenali minat dan bakat " + subj + " membantu mengarahkan waktu layar ke kegiatan yang benar-benar bermanfaat.");
+  } else if (belowTop){
+    card(OTHER_CHECKS.minatBakat, "Mengenali minat dan bakat " + subj + " membantu mengganti sebagian waktu layar dengan kegiatan yang lebih bermanfaat dan menyenangkan.");
   } else if (allStrong){
     card(OTHER_CHECKS.minatBakat, "Kebiasaan digital sudah sehat. Langkah berikutnya: kenali minat dan bakat " + subj + " supaya bisa dikembangkan lebih terarah.");
   }
