@@ -157,13 +157,13 @@ footer.site{max-width:640px; margin:8px auto 0; text-align:center; font-size:13p
     <h2 id="res-title"></h2>
     <p class="res-text" id="res-text"></p>
     <p class="level-ref" id="level-ref"></p>
+    <h3>Hasil Anda di setiap tema</h3>
+    <ul class="themes" id="themes"></ul>
     <div class="conclusion" id="conclusion">
       <h3>Kesimpulan</h3>
       <p id="concl-text"></p>
     </div>
-    <h3>Gambaran per tema</h3>
-    <ul class="themes" id="themes"></ul>
-    <h3 id="prio-title">Mulai dari sini</h3>
+    <h3 id="prio-title">Prioritas utama Anda</h3>
     <ul class="tips prio" id="prio"></ul>
     <h3 id="tips-title">Area lain yang bisa diperkuat</h3>
     <ul class="tips" id="tips"></ul>
@@ -515,12 +515,13 @@ var SITE_URL = "https://monkdigital-id.github.io/cek-kebiasaan-digital/";
 var WA_NUMBER = "";      // nomor WhatsApp monkdigital, format 628xxxxxxxxxx (tanpa + dan spasi)
 var GOATCOUNTER = "";    // kode GoatCounter, misalnya "monkdigital" jika alamatnya monkdigital.goatcounter.com
 
+// ages: kelompok usia yang melihat buku ini. Tambahkan "dewasa" saat ebook untuk dewasa sudah siap.
 var PRODUCTS = [
-  {id:"efek", title:"Efek Digital yang Tanpa Disadari pada Anak", free:true, cta:"Baca gratis",
+  {id:"efek", ages:["balita","sd","remaja"], title:"Efek Digital yang Tanpa Disadari pada Anak", free:true, cta:"Baca gratis",
    desc:"Dampak gadget yang sering luput dari perhatian."},
-  {id:"kembang", title:"Cara Mudah Mengembangkan Anak di Era Digital", free:false, cta:"Kabari saya",
+  {id:"kembang", ages:["balita","sd","remaja"], title:"Cara Mudah Mengembangkan Anak di Era Digital", free:false, cta:"Kabari saya",
    desc:"Dari hasil kuis ke kebiasaan baru di rumah."},
-  {id:"sukses", title:"Anak Sukses di Era Digital", free:false, cta:"Kabari saya",
+  {id:"sukses", ages:["balita","sd","remaja"], title:"Anak Sukses di Era Digital", free:false, cta:"Kabari saya",
    desc:"Saat gadget menjadi jalan untuk berkembang."}
 ];
 
@@ -742,7 +743,9 @@ function showResult(){
   pr.appendChild(sub);
   var anyWeak = stats.some(function(x){ return x.si > 0; });
   function isFeatured(pd){ return (pd.id === "efek" && li > 0) || (pd.id === "kembang" && anyWeak) || (pd.id === "sukses" && li === 0); }
-  PRODUCTS.slice().sort(function(a,b){ return isFeatured(b) - isFeatured(a); }).forEach(function(pd){
+  var prods = PRODUCTS.filter(function(pd){ return !pd.ages || pd.ages.indexOf(g.key) >= 0; });
+  $("products-box").hidden = prods.length === 0;
+  prods.slice().sort(function(a,b){ return isFeatured(b) - isFeatured(a); }).forEach(function(pd){
     var featured = isFeatured(pd);
     var d = document.createElement("div"); d.className = "product" + (featured ? " featured" : "");
     var bd = document.createElement("div"); bd.className = "badges";
